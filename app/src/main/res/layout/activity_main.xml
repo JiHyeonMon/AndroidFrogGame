@@ -4,31 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/layout">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/layout1"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/brown"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/layout2">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/layout2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/skyblue"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout1"
         app:layout_constraintBottom_toTopOf="@id/layout3">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout3"
@@ -56,17 +59,19 @@
 
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/layout5"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/blue"
+        android:orientation="horizontal"
+        android:layoutDirection="rtl"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout4"
         app:layout_constraintBottom_toTopOf="@id/layout6">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout6"
@@ -79,15 +84,9 @@
         app:layout_constraintTop_toBottomOf="@id/layout5"
         app:layout_constraintBottom_toTopOf="@id/layout7">
 
-        <ImageView
-            android:id="@+id/crokerdail"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/crokerdail"/>
-
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/layout7"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -97,7 +96,7 @@
         app:layout_constraintTop_toBottomOf="@id/layout6"
         app:layout_constraintBottom_toTopOf="@id/layout8">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout8"
