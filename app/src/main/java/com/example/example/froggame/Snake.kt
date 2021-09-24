@@ -1,23 +1,23 @@
 package com.example.example.froggame
 
 import android.content.Context
+import android.graphics.Color
+import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 
-class Snake(context: Context) : androidx.appcompat.widget.AppCompatImageView(context), MainActivity.check {
+class Snake(context: Context) : androidx.appcompat.widget.AppCompatImageView(context){
 
     init {
         setImageResource(R.drawable.snake)
+//        setBackgroundColor(Color.BLACK)
         x = (0..1080).random().toFloat()
     }
 
-    override fun check(xF: Int, wF:Int) {
-        if (xF>x){
-            Toast.makeText(context, "frog is bigger", Toast.LENGTH_SHORT).show()
+    fun checkFrog(lFrog: Float, rFrog:Float, callback: Callback) {
+//        Log.e("in checkFrog", "$lFrog $rFrog ${this.x}  ${this.x+this.width}")
+        if ((this.x<rFrog && this.x+this.width>rFrog) || (this.x+this.width>lFrog && this.x<lFrog)){
+            callback.callback()
         }
-        Toast.makeText(context, "$xF  $x", Toast.LENGTH_SHORT).show()
-
     }
-
-
 }

@@ -121,9 +121,11 @@
 
     <ImageView
         android:id="@+id/frog"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:src="@drawable/frog"
+        android:background="@color/brown"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/layout8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

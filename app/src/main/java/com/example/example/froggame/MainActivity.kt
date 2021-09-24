@@ -1,24 +1,24 @@
 package com.example.example.froggame
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
-import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
-
+import android.view.ViewGroup
 
 class MainActivity : AppCompatActivity() {
+
+    var jumpCnt = 6
 
     private var height = 0
     private var width = 0
 
     lateinit var frog: ImageView
+    lateinit var frog1: Frog
 
     lateinit var layout1: LinearLayout
     lateinit var layout2: LinearLayout
@@ -28,6 +28,26 @@ class MainActivity : AppCompatActivity() {
     lateinit var layout6: LinearLayout
     lateinit var layout7: LinearLayout
     lateinit var layout: ConstraintLayout
+
+    lateinit var snake1: Snake
+    lateinit var snake2: Snake
+
+    lateinit var tree1InLayout6: Tree
+    lateinit var tree2InLayout6: Tree
+    lateinit var crokerdailInLayout6: Crokerdail
+
+    lateinit var tree1InLayout5: Tree
+    lateinit var tree2InLayout5: Tree
+    lateinit var crokerdailInLayout5: Crokerdail
+
+    lateinit var tree1InLayout3: Tree
+    lateinit var tree2InLayout3: Tree
+    lateinit var crokerdailInLayout3: Crokerdail
+
+    lateinit var tree1InLayout2: Tree
+    lateinit var tree2InLayout2: Tree
+    lateinit var crokerdailInLayout2: Crokerdail
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,44 +65,76 @@ class MainActivity : AppCompatActivity() {
         val btnJump = findViewById<Button>(R.id.btnJump)
         frog = findViewById(R.id.frog)
 
-//        setFrog()
-        setSnake()
-        startLayout2()
-        startLayout3()
-        startLayout5()
-        startLayout6()
+        gameStart()
 
         btnJump.setOnClickListener {
-            frog.y -= height
+            frog1.y -= height
 
-            Toast.makeText(this, "${frog.x}  ${frog.x+width}", Toast.LENGTH_SHORT).show()
+            jumpCnt -= 1
+
+            when (jumpCnt) {
+                5 -> {
+                    checkFrog(tree1InLayout6, tree2InLayout6, crokerdailInLayout6)
+                }
+                4 -> {
+                    frog1.handler.removeCallbacks(frog1.r)
+                    checkFrog(tree1InLayout5, tree2InLayout5, crokerdailInLayout5)
+                }
+                3 -> {
+                    frog1.handler.removeCallbacks(frog1.r)
+
+                    snake1.checkFrog(frog1.x, frog1.x + frog1.width, callback)
+                    snake2.checkFrog(frog1.x, frog1.x + frog1.width, callback)
+                }
+                2 -> {
+                    frog1.handler.removeCallbacks(frog1.r)
+
+                    checkFrog(tree1InLayout3, tree2InLayout3, crokerdailInLayout3)
+                }
+                1 -> {
+                    frog1.handler.removeCallbacks(frog1.r)
+
+                    checkFrog(tree1InLayout2, tree2InLayout2, crokerdailInLayout2)
+                }
+                0 -> {
+                    frog1.handler.removeCallbacks(frog1.r)
+                }
+            }
 
         }
-    }
-
-    private fun setFrog() {
-        //액티비티의 최 상위 윈도우에 윈도우로 뷰 추가하기
-        val params = WindowManager.LayoutParams()
-
-        params.x = width/2-75
-        params.y = layout7.y.toInt()*6
-        frog = Frog(this)
-        frog.layoutParams = params
-
-        layout.addView(frog, 200, 200)
 
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-
         height = layout2.measuredHeight
         width = layout2.measuredWidth
     }
 
+    fun gameStart() {
+        setFrog()
+        setSnake()
+        startLayout2()
+        startLayout3()
+        startLayout5()
+        startLayout6()
+    }
+
+    private fun setFrog() {
+        frog1 = Frog(this)
+        frog1.isDead(callback)
+
+        frog1.layoutParams = ViewGroup.LayoutParams(150, 150)
+
+        layout.addView(frog1)
+        frog1.y = 1050f
+        frog1.x = 450f
+    }
+
+
     private fun setSnake() {
-        val snake1 = Snake(this)
-        val snake2 = Snake(this)
+        snake1 = Snake(this)
+        snake2 = Snake(this)
 
         layout4.addView(snake1, 175, 175)
         layout4.addView(snake2, 175, 175)
@@ -90,74 +142,114 @@ class MainActivity : AppCompatActivity() {
 
     private fun startLayout2() {
         //toRight
-        val  layoutParams =  LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
+        val layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
         layoutParams.weight = 1f
 
-        val tree1 = Tree(this)
-        val tree2 = Tree(this)
-        val crokerdail = Crokerdail(this, false)
+        tree1InLayout2 = Tree(this)
+        tree2InLayout2 = Tree(this)
+        crokerdailInLayout2 = Crokerdail(this, false)
 
-        layout2.addView(tree1, layoutParams)
-        layout2.addView(tree2, layoutParams)
-        layout2.addView(crokerdail, layoutParams)
-        tree1.move(5)
-        tree2.move(8)
-        crokerdail.move(6)
+        layout2.addView(tree1InLayout2, layoutParams)
+        layout2.addView(tree2InLayout2, layoutParams)
+        layout2.addView(crokerdailInLayout2, layoutParams)
+        tree1InLayout2.move((3..6).random())
+        tree2InLayout2.move((3..6).random())
+        crokerdailInLayout2.move((3..6).random())
     }
 
     private fun startLayout3() {
         // toLeft
-        val  layoutParams =  LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
+        val layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
         layoutParams.weight = 1f
 
-        val tree1 = Tree(this)
-        val tree2 = Tree(this)
-        val crokerdail = Crokerdail(this, true)
+        tree1InLayout3 = Tree(this)
+        tree2InLayout3 = Tree(this)
+        crokerdailInLayout3 = Crokerdail(this, true)
 
-        layout3.addView(tree1, layoutParams)
-        layout3.addView(tree2, layoutParams)
-        layout3.addView(crokerdail, layoutParams)
-        tree1.move(-3)
-        tree2.move(-5)
-        crokerdail.move(-4)
+        layout3.addView(tree1InLayout3, layoutParams)
+        layout3.addView(tree2InLayout3, layoutParams)
+        layout3.addView(crokerdailInLayout3, layoutParams)
+        tree1InLayout3.move((-6..-3).random())
+        tree2InLayout3.move((-6..-3).random())
+        crokerdailInLayout3.move((-6..-3).random())
     }
 
     private fun startLayout5() {
         //toRight
-        val  layoutParams =  LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
+        val layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
         layoutParams.weight = 1f
 
-        val tree1 = Tree(this)
-        val tree2 = Tree(this)
-        val crokerdail = Crokerdail(this, false)
+        tree1InLayout5 = Tree(this)
+        tree2InLayout5 = Tree(this)
+        crokerdailInLayout5 = Crokerdail(this, false)
 
-        layout5.addView(tree1, layoutParams)
-        layout5.addView(tree2, layoutParams)
-        layout5.addView(crokerdail, layoutParams)
-        tree1.move(3)
-        tree2.move(5)
-        crokerdail.move(4)
+        layout5.addView(tree1InLayout5, layoutParams)
+        layout5.addView(tree2InLayout5, layoutParams)
+        layout5.addView(crokerdailInLayout5, layoutParams)
+        tree1InLayout5.move((3..6).random())
+        tree2InLayout5.move((3..6).random())
+        crokerdailInLayout5.move((3..6).random())
     }
 
     private fun startLayout6() {
         // toLeft
-        val  layoutParams =  LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
+        val layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
         layoutParams.weight = 1f
 
-        val tree1 = Tree(this)
-        val tree2 = Tree(this)
-        val crokerdail = Crokerdail(this, true)
+        tree1InLayout6 = Tree(this)
+        tree2InLayout6 = Tree(this)
+        crokerdailInLayout6 = Crokerdail(this, true)
 
-        layout6.addView(tree1, layoutParams)
-        layout6.addView(tree2, layoutParams)
-        layout6.addView(crokerdail, layoutParams)
-        tree1.move(-5)
-        tree2.move(-8)
-        crokerdail.move(-6)
+        layout6.addView(tree1InLayout6, layoutParams)
+        layout6.addView(tree2InLayout6, layoutParams)
+        layout6.addView(crokerdailInLayout6, layoutParams)
+        tree1InLayout6.move((-6..-3).random())
+        tree2InLayout6.move((-6..-3).random())
+        crokerdailInLayout6.move((-6..-3).random())
 
     }
 
-    interface check {
-        fun check(xF: Int, wF:Int)
+    fun checkFrog(tree1: Tree, tree2: Tree, crokerdail: Crokerdail) {
+        if (frog1.x >= tree1.x &&
+            frog1.x + frog1.width <= tree1.x + tree1.width
+        ) {
+            Log.e("tree1 Speed", "${tree1.getSpeed()}")
+            frog1.move(tree1.getSpeed())
+        }else if (frog1.x >= tree2.x &&
+            frog1.x + frog1.width <= tree2.x + tree2.width
+        ) {
+            Log.e("tree1 Speed", "${tree2.getSpeed()}")
+            frog1.move(tree2.getSpeed())
+        } else if (frog1.x >= crokerdail.x &&
+            frog1.x + frog1.width <= crokerdail.x + crokerdail.width
+        ) {
+            Log.e("tree1 Speed", "${crokerdail.getSpeed()}")
+            frog1.move(crokerdail.getSpeed())
+        } else {
+            Toast.makeText(this, "[3] Frog Dead - The End", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    val callback = object : Callback {
+        override fun callback() {
+            Toast.makeText(this@MainActivity, "[2] Meet Snake - The End", Toast.LENGTH_SHORT).show()
+        }
+
+        override fun dead() {
+            gameStart()
+            jumpCnt = 6
+        }
     }
 }

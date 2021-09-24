@@ -7,6 +7,7 @@ import android.view.animation.AnimationUtils
 
 class Crokerdail(context: Context, reverse: Boolean) :
     androidx.appcompat.widget.AppCompatImageView(context) {
+    private var speed = 0
 
     init {
         setImageResource(R.drawable.crokerdail)
@@ -14,8 +15,10 @@ class Crokerdail(context: Context, reverse: Boolean) :
             rotationY = 180F
         }
     }
+    fun getSpeed(): Int = this.speed
 
     fun move(speed: Int) {
+        this.speed = speed
         val handler = Handler()
 
         val r: Runnable = object : Runnable {

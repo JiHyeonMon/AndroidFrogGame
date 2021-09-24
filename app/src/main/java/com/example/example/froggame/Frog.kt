@@ -1,56 +1,57 @@
 package com.example.example.froggame
 
 import android.content.Context
-import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Handler
-import android.R
-import android.content.res.Resources
-
-import android.graphics.BitmapFactory
-
-import android.graphics.Bitmap
-import android.os.Parcel
-import android.os.Parcelable
-import android.view.View
-import android.widget.ImageView
+import android.util.Log
+import android.widget.Toast
 
 
 class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(context) {
 
+    lateinit var r: Runnable
+    private var frogSpeed = 0
+    private var isDead = false
 
     init {
-//        setImageResource(R.drawable.frog)
-    }
 
-    fun jump(location: Float, h: Int) {
-        x = location
-        y -= h
-        invalidate()
-    }
+        setImageResource(R.drawable.frog)
+//        setBackgroundColor(Color.WHITE)
 
-    fun move(speed: Int) {
-        val handler = Handler()
-
-        val r: Runnable = object : Runnable {
+        r = object : Runnable {
             override fun run() {
-                if (speed > 0) {
-                    x += speed
-                    if (x > 1080) {
-                        x = 0F - width
+                Log.e("frog Speed", "$frogSpeed")
+                if (frogSpeed > 0) {
+                    x += frogSpeed
+                    if (x+width > 1080) {
+                        Toast.makeText(context, "[1-2] Frog Dead - The End", Toast.LENGTH_SHORT).show()
+                        isDead = true
                     }
                 } else {
-                    x += speed
-                    if (x+width < 0) {
-                        x = 1080F
+                    x += frogSpeed
+                    if (x < 0) {
+                        Toast.makeText(context, "[1-1] Frog Dead - The End", Toast.LENGTH_SHORT).show()
+                        isDead = true
                     }
                 }
 
                 handler.postDelayed(this, 10)
             }
         }
+    }
 
-        handler.postDelayed(r, 1000)
+    fun move(speed: Int) {
+        this.frogSpeed = speed
+        Log.e("in move", "$frogSpeed")
+
+        val handler = Handler()
+        handler.post(r)
 
     }
 
+    fun isDead(callback: Callback) {
+        if (isDead) {
+            callback.dead()
+        }
+    }
 }
