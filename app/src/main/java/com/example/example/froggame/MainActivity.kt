@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var frog: ImageView
     lateinit var frog1: Frog
 
-    lateinit var layout1: LinearLayout
+    lateinit var layout1: ConstraintLayout
     lateinit var layout2: LinearLayout
     lateinit var layout3: LinearLayout
     lateinit var layout4: LinearLayout
@@ -63,7 +64,6 @@ class MainActivity : AppCompatActivity() {
         layout = findViewById(R.id.layout)
 
         val btnJump = findViewById<Button>(R.id.btnJump)
-        frog = findViewById(R.id.frog)
 
         gameStart()
 
@@ -98,6 +98,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 0 -> {
                     frog1.handler.removeCallbacks(frog1.r)
+                    checkScore()
                 }
             }
 
@@ -242,12 +243,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun checkScore() {
+        if ((frog1.x>panel1.x && frog1.y<panel1.y) || (frog1.x>panel2.x && frog1.y<panel2.y) || (frog1.x>panel3.x && frog1.y<panel3.y)) {
+            textScore.text = (textScore.text.toString().toInt()+1).toString()
+            gameStart()
+        } else {
+            textLives.text = (textScore.text.toString().toInt()+1).toString()
+            gameStart()
+        }
+    }
+
     val callback = object : Callback {
         override fun callback() {
             Toast.makeText(this@MainActivity, "[2] Meet Snake - The End", Toast.LENGTH_SHORT).show()
         }
 
         override fun dead() {
+            textLives.text = (textScore.text.toString().toInt()-1).toString()
             gameStart()
             jumpCnt = 6
         }

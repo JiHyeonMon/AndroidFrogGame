@@ -9,7 +9,7 @@ import android.widget.Toast
 
 class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(context) {
 
-    lateinit var r: Runnable
+    var r: Runnable
     private var frogSpeed = 0
     private var isDead = false
 
@@ -46,7 +46,6 @@ class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(cont
 
         val handler = Handler()
         handler.post(r)
-
     }
 
     fun isDead(callback: Callback) {

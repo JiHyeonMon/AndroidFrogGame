@@ -15,9 +15,8 @@ class Snake(context: Context) : androidx.appcompat.widget.AppCompatImageView(con
     }
 
     fun checkFrog(lFrog: Float, rFrog:Float, callback: Callback) {
-//        Log.e("in checkFrog", "$lFrog $rFrog ${this.x}  ${this.x+this.width}")
         if ((this.x<rFrog && this.x+this.width>rFrog) || (this.x+this.width>lFrog && this.x<lFrog)){
             callback.callback()
-        }
+        } else return
     }
 }
