@@ -1,14 +1,12 @@
 package com.example.example.froggame
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.view.View
 import android.view.ViewGroup
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -18,8 +16,10 @@ class MainActivity : AppCompatActivity() {
     private var height = 0
     private var width = 0
 
-    lateinit var frog: ImageView
     lateinit var frog1: Frog
+
+    lateinit var score: TextView
+    lateinit var lives: TextView
 
     lateinit var layout1: ConstraintLayout
     lateinit var layout2: LinearLayout
@@ -63,6 +63,12 @@ class MainActivity : AppCompatActivity() {
         layout7 = findViewById(R.id.layout7)
         layout = findViewById(R.id.layout)
 
+        score = findViewById(R.id.textScore)
+        lives = findViewById(R.id.textLives)
+
+        score.text = "0"
+        lives.text = "4"
+
         val btnJump = findViewById<Button>(R.id.btnJump)
 
         gameStart()
@@ -82,18 +88,15 @@ class MainActivity : AppCompatActivity() {
                 }
                 3 -> {
                     frog1.handler.removeCallbacks(frog1.r)
-
                     snake1.checkFrog(frog1.x, frog1.x + frog1.width, callback)
                     snake2.checkFrog(frog1.x, frog1.x + frog1.width, callback)
                 }
                 2 -> {
                     frog1.handler.removeCallbacks(frog1.r)
-
                     checkFrog(tree1InLayout3, tree2InLayout3, crokerdailInLayout3)
                 }
                 1 -> {
                     frog1.handler.removeCallbacks(frog1.r)
-
                     checkFrog(tree1InLayout2, tree2InLayout2, crokerdailInLayout2)
                 }
                 0 -> {
@@ -101,9 +104,7 @@ class MainActivity : AppCompatActivity() {
                     checkScore()
                 }
             }
-
         }
-
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -121,14 +122,22 @@ class MainActivity : AppCompatActivity() {
         startLayout6()
     }
 
+    fun restart() {
+        jumpCnt = 6
+        setFrog()
+
+        snake1.setSnake()
+        snake2.setSnake()
+    }
+
     private fun setFrog() {
         frog1 = Frog(this)
-        frog1.isDead(callback)
+        frog1.setCallback(callback)
 
-        frog1.layoutParams = ViewGroup.LayoutParams(150, 150)
+        frog1.layoutParams = ViewGroup.LayoutParams(120, 120)
 
         layout.addView(frog1)
-        frog1.y = 1050f
+        frog1.y = 1055f
         frog1.x = 450f
     }
 
@@ -222,13 +231,13 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun checkFrog(tree1: Tree, tree2: Tree, crokerdail: Crokerdail) {
+    private fun checkFrog(tree1: Tree, tree2: Tree, crokerdail: Crokerdail) {
         if (frog1.x >= tree1.x &&
             frog1.x + frog1.width <= tree1.x + tree1.width
         ) {
             Log.e("tree1 Speed", "${tree1.getSpeed()}")
             frog1.move(tree1.getSpeed())
-        }else if (frog1.x >= tree2.x &&
+        } else if (frog1.x >= tree2.x &&
             frog1.x + frog1.width <= tree2.x + tree2.width
         ) {
             Log.e("tree1 Speed", "${tree2.getSpeed()}")
@@ -239,29 +248,35 @@ class MainActivity : AppCompatActivity() {
             Log.e("tree1 Speed", "${crokerdail.getSpeed()}")
             frog1.move(crokerdail.getSpeed())
         } else {
-            Toast.makeText(this, "[3] Frog Dead - The End", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "[3] Frog Drown - The End", Toast.LENGTH_SHORT).show()
+            callback.dead()
         }
     }
 
     fun checkScore() {
-        if ((frog1.x>panel1.x && frog1.y<panel1.y) || (frog1.x>panel2.x && frog1.y<panel2.y) || (frog1.x>panel3.x && frog1.y<panel3.y)) {
-            textScore.text = (textScore.text.toString().toInt()+1).toString()
-            gameStart()
+        Log.e("checkScore", "${frog1.x} ${frog1.x + frog1.width} ${panel2.left} ${panel2.right}")
+        if ((frog1.x > panel1.left && frog1.x + frog1.width < panel1.right) || (frog1.x > panel2.left && frog1.x + frog1.width < panel2.right) || (frog1.x > panel3.left && frog1.x + frog1.width < panel3.right)) {
+            // in - 점수 획득
+            score.text = (score.text.toString().toInt() + 1).toString()
+            restart()
         } else {
-            textLives.text = (textScore.text.toString().toInt()+1).toString()
-            gameStart()
+            lives.text = (lives.text.toString().toInt() - 1).toString()
+            restart()
         }
     }
 
-    val callback = object : Callback {
+    private val callback = object : Callback {
         override fun callback() {
             Toast.makeText(this@MainActivity, "[2] Meet Snake - The End", Toast.LENGTH_SHORT).show()
+            lives.text = (lives.text.toString().toInt() - 1).toString()
+            dead()
         }
 
         override fun dead() {
-            textLives.text = (textScore.text.toString().toInt()-1).toString()
-            gameStart()
-            jumpCnt = 6
+//            layout.removeViewInLayout(frog1)
+
+            lives.text = (lives.text.toString().toInt() - 1).toString()
+            restart()
         }
     }
 }

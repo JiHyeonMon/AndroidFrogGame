@@ -1,9 +1,7 @@
 package com.example.example.froggame
 
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.os.Handler
-import android.view.animation.AnimationUtils
 
 class Crokerdail(context: Context, reverse: Boolean) :
     androidx.appcompat.widget.AppCompatImageView(context) {
@@ -38,8 +36,6 @@ class Crokerdail(context: Context, reverse: Boolean) :
                 handler.postDelayed(this, 10)
             }
         }
-
         handler.postDelayed(r, 1000)
-
     }
 }

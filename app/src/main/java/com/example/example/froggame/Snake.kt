@@ -11,12 +11,16 @@ class Snake(context: Context) : androidx.appcompat.widget.AppCompatImageView(con
     init {
         setImageResource(R.drawable.snake)
 //        setBackgroundColor(Color.BLACK)
-        x = (0..1080).random().toFloat()
+        setSnake()
     }
 
     fun checkFrog(lFrog: Float, rFrog:Float, callback: Callback) {
         if ((this.x<rFrog && this.x+this.width>rFrog) || (this.x+this.width>lFrog && this.x<lFrog)){
             callback.callback()
         } else return
+    }
+
+    fun setSnake() {
+        x = (0..1080).random().toFloat()
     }
 }

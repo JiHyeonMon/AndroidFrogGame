@@ -11,12 +11,13 @@ class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(cont
 
     var r: Runnable
     private var frogSpeed = 0
-    private var isDead = false
+    lateinit var mCallback: Callback
 
     init {
 
         setImageResource(R.drawable.frog)
-//        setBackgroundColor(Color.WHITE)
+        setBackgroundColor(Color.WHITE)
+        scaleType = ScaleType.CENTER_CROP
 
         r = object : Runnable {
             override fun run() {
@@ -25,16 +26,15 @@ class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(cont
                     x += frogSpeed
                     if (x+width > 1080) {
                         Toast.makeText(context, "[1-2] Frog Dead - The End", Toast.LENGTH_SHORT).show()
-                        isDead = true
+                        dead()
                     }
                 } else {
                     x += frogSpeed
                     if (x < 0) {
                         Toast.makeText(context, "[1-1] Frog Dead - The End", Toast.LENGTH_SHORT).show()
-                        isDead = true
+                        dead()
                     }
                 }
-
                 handler.postDelayed(this, 10)
             }
         }
@@ -48,9 +48,11 @@ class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(cont
         handler.post(r)
     }
 
-    fun isDead(callback: Callback) {
-        if (isDead) {
-            callback.dead()
-        }
+    fun setCallback(callback: Callback) {
+        this.mCallback = callback
+    }
+
+    fun dead() {
+        this.mCallback.dead()
     }
 }
