@@ -2,6 +2,7 @@ package com.example.example.froggame
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -125,8 +126,8 @@ class MainActivity : AppCompatActivity() {
         jumpCnt = 6
         setFrog()
 
-        snake1.setSnake()
-        snake2.setSnake()
+        snake1.relocate()
+        snake2.relocate()
     }
 
     private fun setFrog() {
@@ -237,8 +238,7 @@ class MainActivity : AppCompatActivity() {
             frog1.x + frog1.width <= crokerdail.x + crokerdail.width
         ) {
             if (crokerdail.isHead(frog1.x, frog1.x+frog1.width)) {
-                Toast.makeText(this, "[4] Crokerdail Eat Frog - The End", Toast.LENGTH_SHORT).show()
-                callback.dead()
+                callback.frogDead("crokerdail")
             } else {
                 frog1.move(crokerdail.getSpeed())
             }
@@ -251,33 +251,35 @@ class MainActivity : AppCompatActivity() {
         ) {
             frog1.move(tree1.getSpeed())
         }  else {
-            Toast.makeText(this, "[3] Frog Drown - The End", Toast.LENGTH_SHORT).show()
-            callback.dead()
+            callback.frogDead("drown")
         }
     }
 
     private fun checkScore() {
-        Log.e("checkScore", "${frog1.x} ${frog1.x + frog1.width} ${panel2.left} ${panel2.right}")
         if ((frog1.x > panel1.left && frog1.x + frog1.width < panel1.right) || (frog1.x > panel2.left && frog1.x + frog1.width < panel2.right) || (frog1.x > panel3.left && frog1.x + frog1.width < panel3.right)) {
             // in - 점수 획득
             score.text = (score.text.toString().toInt() + 1).toString()
             restart()
         } else {
-            lives.text = (lives.text.toString().toInt() - 1).toString()
-            restart()
+            // out - 점수판 위로 못올라 온 경우
+            callback.frogDead("drown")
         }
     }
 
     private val callback = object : Callback {
-        override fun callback() {
-            Toast.makeText(this@MainActivity, "[2] Meet Snake - The End", Toast.LENGTH_SHORT).show()
+        override fun frogDead(cause: String) {
+            frog1.visibility = View.GONE
             lives.text = (lives.text.toString().toInt() - 1).toString()
-            dead()
-        }
 
-        override fun dead() {
+            when (cause) {
+                "right" -> Toast.makeText(this@MainActivity, "[1-1] Frog bump into right wall - The End", Toast.LENGTH_SHORT).show()
+                "left" -> Toast.makeText(this@MainActivity, "[1-2] Frog bump into left wall - The End", Toast.LENGTH_SHORT).show()
+                "snake" -> Toast.makeText(this@MainActivity, "[2] Meet Snake - The End", Toast.LENGTH_SHORT).show()
+                "drown" -> Toast.makeText(this@MainActivity, "[3] Frog Drown - The End", Toast.LENGTH_SHORT).show()
+                "crokerdail" -> Toast.makeText(this@MainActivity, "[4] Crokerdail eat Frog - The End", Toast.LENGTH_SHORT).show()
+                else -> Toast.makeText(this@MainActivity, "Error - Unkown Dead", Toast.LENGTH_SHORT).show()
+            }
 
-            lives.text = (lives.text.toString().toInt() - 1).toString()
             restart()
         }
     }

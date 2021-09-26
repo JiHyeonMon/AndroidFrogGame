@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Handler
 import android.util.Log
-import android.widget.Toast
 
 
 class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(context) {
@@ -26,9 +25,7 @@ class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(cont
                     if (x + width <= 1080) {
                         x += frogSpeed
                         if (x + width > 1080F) {
-                            Toast.makeText(context, "[1-2] Frog Dead - The End", Toast.LENGTH_SHORT)
-                                .show()
-                            dead()
+                            dead("right")
                         }
                     }
 
@@ -36,9 +33,7 @@ class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(cont
                     if (x >= 0) {
                         x += frogSpeed
                         if (x < 0F) {
-                            Toast.makeText(context, "[1-1] Frog Dead - The End", Toast.LENGTH_SHORT)
-                                .show()
-                            dead()
+                            dead("left")
                         }
                     }
 
@@ -62,7 +57,7 @@ class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(cont
         this.mCallback = callback
     }
 
-    fun dead() {
-        this.mCallback.dead()
+    fun dead(direction: String) {
+        this.mCallback.frogDead(direction)
     }
 }
