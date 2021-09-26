@@ -6,32 +6,31 @@ import android.os.Handler
 import android.util.Log
 
 
-class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(context) {
+class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(context),
+    Movement {
 
     var r: Runnable
-    private var frogSpeed = 0
-    lateinit var mCallback: Callback
+    private var speed = 0
+    lateinit var mNotification: Notification
 
     init {
-
         setImageResource(R.drawable.frog)
         setBackgroundColor(Color.WHITE)
         scaleType = ScaleType.CENTER_CROP
 
         r = object : Runnable {
             override fun run() {
-                Log.e("frog Speed", "$frogSpeed")
-                if (frogSpeed > 0) {
+                Log.e("frog Speed", "$speed")
+                if (speed > 0) {
                     if (x + width <= 1080) {
-                        x += frogSpeed
+                        x += speed
                         if (x + width > 1080F) {
                             dead("right")
                         }
                     }
-
                 } else {
                     if (x >= 0) {
-                        x += frogSpeed
+                        x += speed
                         if (x < 0F) {
                             dead("left")
                         }
@@ -40,24 +39,22 @@ class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(cont
                 }
                 handler.postDelayed(this, 10)
             }
-
-
         }
     }
 
-    fun move(speed: Int) {
-        this.frogSpeed = speed
-        Log.e("in move", "$frogSpeed")
+    override fun move(speed: Int) {
+        this.speed = speed
+        Log.e("in move", "$speed")
 
         val handler = Handler()
         handler.post(r)
     }
 
-    fun setCallback(callback: Callback) {
-        this.mCallback = callback
+    fun setCallback(notification: Notification) {
+        this.mNotification = notification
     }
 
     fun dead(direction: String) {
-        this.mCallback.frogDead(direction)
+        this.mNotification.frogDead(direction)
     }
 }

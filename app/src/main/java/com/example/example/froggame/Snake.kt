@@ -9,9 +9,9 @@ class Snake(context: Context) : androidx.appcompat.widget.AppCompatImageView(con
         relocate()
     }
 
-    fun checkFrog(lFrog: Float, rFrog:Float, callback: Callback) {
+    fun checkFrog(lFrog: Float, rFrog:Float, notification: Notification) {
         if ((this.x<rFrog && this.x+this.width>rFrog) || (this.x+this.width>lFrog && this.x<lFrog)){
-            callback.frogDead("snake")
+            notification.frogDead("snake")
         } else return
     }
 

@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Handler
 
 class Crokerdail(context: Context) :
-    androidx.appcompat.widget.AppCompatImageView(context) {
+    androidx.appcompat.widget.AppCompatImageView(context), Movement {
     private var speed = 0
     private var reverse: Boolean = false
 
@@ -19,7 +19,7 @@ class Crokerdail(context: Context) :
 
     fun getSpeed(): Int = this.speed
 
-    fun move(speed: Int) {
+    override fun move(speed: Int) {
         this.speed = speed
         val handler = Handler()
 
@@ -42,7 +42,6 @@ class Crokerdail(context: Context) :
         }
         handler.postDelayed(r, 1000)
     }
-
 
     fun isHead(lFrog: Float, rFrog: Float): Boolean {
         if (this.reverse) {

@@ -1,5 +1,5 @@
 package com.example.example.froggame
 
-interface Callback {
+interface Notification {
     fun frogDead(cause: String)
 }

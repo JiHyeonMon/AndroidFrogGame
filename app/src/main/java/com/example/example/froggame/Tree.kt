@@ -3,7 +3,7 @@ package com.example.example.froggame
 import android.content.Context
 import android.os.Handler
 
-class Tree(context: Context) : androidx.appcompat.widget.AppCompatImageView(context) {
+class Tree(context: Context) : androidx.appcompat.widget.AppCompatImageView(context), Movement {
     private var speed = 0
 
     init {
@@ -13,9 +13,8 @@ class Tree(context: Context) : androidx.appcompat.widget.AppCompatImageView(cont
 
     fun getSpeed(): Int = this.speed
 
-    fun move(speed: Int) {
+    override fun move(speed: Int) {
         this.speed = speed
-
 
         val handler = Handler()
         handler.postDelayed(object : Runnable {

@@ -1,7 +1,6 @@
 package com.example.example.froggame
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -88,8 +87,8 @@ class MainActivity : AppCompatActivity() {
                 }
                 3 -> {
                     frog1.handler.removeCallbacks(frog1.r)
-                    snake1.checkFrog(frog1.x, frog1.x + frog1.width, callback)
-                    snake2.checkFrog(frog1.x, frog1.x + frog1.width, callback)
+                    snake1.checkFrog(frog1.x, frog1.x + frog1.width, notification)
+                    snake2.checkFrog(frog1.x, frog1.x + frog1.width, notification)
                 }
                 2 -> {
                     frog1.handler.removeCallbacks(frog1.r)
@@ -132,7 +131,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setFrog() {
         frog1 = Frog(this)
-        frog1.setCallback(callback)
+        frog1.setCallback(notification)
 
         frog1.layoutParams = ViewGroup.LayoutParams(120, 120)
 
@@ -238,7 +237,7 @@ class MainActivity : AppCompatActivity() {
             frog1.x + frog1.width <= crokerdail.x + crokerdail.width
         ) {
             if (crokerdail.isHead(frog1.x, frog1.x+frog1.width)) {
-                callback.frogDead("crokerdail")
+                notification.frogDead("crokerdail")
             } else {
                 frog1.move(crokerdail.getSpeed())
             }
@@ -251,7 +250,7 @@ class MainActivity : AppCompatActivity() {
         ) {
             frog1.move(tree1.getSpeed())
         }  else {
-            callback.frogDead("drown")
+            notification.frogDead("drown")
         }
     }
 
@@ -262,11 +261,11 @@ class MainActivity : AppCompatActivity() {
             restart()
         } else {
             // out - 점수판 위로 못올라 온 경우
-            callback.frogDead("drown")
+            notification.frogDead("drown")
         }
     }
 
-    private val callback = object : Callback {
+    private val notification = object : Notification {
         override fun frogDead(cause: String) {
             frog1.visibility = View.GONE
             lives.text = (lives.text.toString().toInt() - 1).toString()
