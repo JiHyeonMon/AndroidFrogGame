@@ -2,7 +2,6 @@ package com.example.example.froggame
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -232,28 +231,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkFrog(tree1: Tree, tree2: Tree, crokerdail: Crokerdail) {
-        if (frog1.x >= tree1.x &&
-            frog1.x + frog1.width <= tree1.x + tree1.width
-        ) {
-            Log.e("tree1 Speed", "${tree1.getSpeed()}")
-            frog1.move(tree1.getSpeed())
-        } else if (frog1.x >= tree2.x &&
-            frog1.x + frog1.width <= tree2.x + tree2.width
-        ) {
-            Log.e("tree1 Speed", "${tree2.getSpeed()}")
-            frog1.move(tree2.getSpeed())
-        } else if (frog1.x >= crokerdail.x &&
+        // 캐릭터들 속도 랜덤 - 캐릭터들 겹쳐있을 경우 올라타는 순서가 조건문 순서
+        // 캐릭터들 생성 속도가 tree1 > tree2 > crokerdail 순서라 역순으로 조건문 형성 - 겹칠 경우 제일 위로 오는 순서
+        if (frog1.x >= crokerdail.x &&
             frog1.x + frog1.width <= crokerdail.x + crokerdail.width
         ) {
-            Log.e("tree1 Speed", "${crokerdail.getSpeed()}")
-            frog1.move(crokerdail.getSpeed())
-        } else {
+            if (crokerdail.isHead(frog1.x, frog1.x+frog1.width)) {
+                Toast.makeText(this, "[4] Crokerdail Eat Frog - The End", Toast.LENGTH_SHORT).show()
+                callback.dead()
+            } else {
+                frog1.move(crokerdail.getSpeed())
+            }
+        }else if (frog1.x >= tree2.x &&
+            frog1.x + frog1.width <= tree2.x + tree2.width
+        ) {
+            frog1.move(tree1.getSpeed())
+        } else if (frog1.x >= tree1.x &&
+            frog1.x + frog1.width <= tree1.x + tree1.width
+        ) {
+            frog1.move(tree2.getSpeed())
+        }  else {
             Toast.makeText(this, "[3] Frog Drown - The End", Toast.LENGTH_SHORT).show()
             callback.dead()
         }
     }
 
-    fun checkScore() {
+    private fun checkScore() {
         Log.e("checkScore", "${frog1.x} ${frog1.x + frog1.width} ${panel2.left} ${panel2.right}")
         if ((frog1.x > panel1.left && frog1.x + frog1.width < panel1.right) || (frog1.x > panel2.left && frog1.x + frog1.width < panel2.right) || (frog1.x > panel3.left && frog1.x + frog1.width < panel3.right)) {
             // in - 점수 획득
