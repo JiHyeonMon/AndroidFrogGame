@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var frog1: Frog
 
-    lateinit var score: TextView
+    private lateinit var score: TextView
     lateinit var lives: TextView
 
     lateinit var layout1: ConstraintLayout
@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         width = layout2.measuredWidth
     }
 
-    fun gameStart() {
+    private fun gameStart() {
         setFrog()
         setSnake()
         startLayout2()
@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
 
         tree1InLayout2 = Tree(this)
         tree2InLayout2 = Tree(this)
-        crokerdailInLayout2 = Crokerdail(this, false)
+        crokerdailInLayout2 = Crokerdail(this)
 
         layout2.addView(tree1InLayout2, layoutParams)
         layout2.addView(tree2InLayout2, layoutParams)
@@ -199,7 +199,7 @@ class MainActivity : AppCompatActivity() {
 
         tree1InLayout5 = Tree(this)
         tree2InLayout5 = Tree(this)
-        crokerdailInLayout5 = Crokerdail(this, false)
+        crokerdailInLayout5 = Crokerdail(this)
 
         layout5.addView(tree1InLayout5, layoutParams)
         layout5.addView(tree2InLayout5, layoutParams)
@@ -245,11 +245,11 @@ class MainActivity : AppCompatActivity() {
         }else if (frog1.x >= tree2.x &&
             frog1.x + frog1.width <= tree2.x + tree2.width
         ) {
-            frog1.move(tree1.getSpeed())
+            frog1.move(tree2.getSpeed())
         } else if (frog1.x >= tree1.x &&
             frog1.x + frog1.width <= tree1.x + tree1.width
         ) {
-            frog1.move(tree2.getSpeed())
+            frog1.move(tree1.getSpeed())
         }  else {
             Toast.makeText(this, "[3] Frog Drown - The End", Toast.LENGTH_SHORT).show()
             callback.dead()
@@ -276,7 +276,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun dead() {
-//            layout.removeViewInLayout(frog1)
 
             lives.text = (lives.text.toString().toInt() - 1).toString()
             restart()

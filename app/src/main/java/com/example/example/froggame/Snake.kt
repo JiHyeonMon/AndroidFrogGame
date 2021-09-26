@@ -21,6 +21,6 @@ class Snake(context: Context) : androidx.appcompat.widget.AppCompatImageView(con
     }
 
     fun setSnake() {
-        x = (0..1080).random().toFloat()
+        x = (0..1080-width).random().toFloat()
     }
 }

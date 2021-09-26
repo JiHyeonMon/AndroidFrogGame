@@ -2,20 +2,21 @@ package com.example.example.froggame
 
 import android.content.Context
 import android.os.Handler
-import android.widget.Toast
 
-class Crokerdail(context: Context, reverse: Boolean) :
+class Crokerdail(context: Context) :
     androidx.appcompat.widget.AppCompatImageView(context) {
     private var speed = 0
     private var reverse: Boolean = false
 
+    constructor(context: Context, reverse: Boolean): this(context) {
+        this.reverse = reverse
+        rotationY = 180F
+    }
+
     init {
         setImageResource(R.drawable.crokerdail)
-        if (reverse) {
-            this.reverse = true
-            rotationY = 180F
-        }
     }
+
     fun getSpeed(): Int = this.speed
 
     fun move(speed: Int) {
@@ -49,7 +50,7 @@ class Crokerdail(context: Context, reverse: Boolean) :
             if (lFrog>=this.x && lFrog<this.x+this.width/3) return true
         } else {
             // 머리가 오른쪽
-            if (rFrog<this.x+this.width && rFrog>this.width*2/3) return true
+            if (rFrog<this.x+this.width && rFrog>this.x+this.width*2/3) return true
         }
         return false
     }

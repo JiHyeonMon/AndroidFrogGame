@@ -23,20 +23,30 @@ class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(cont
             override fun run() {
                 Log.e("frog Speed", "$frogSpeed")
                 if (frogSpeed > 0) {
-                    x += frogSpeed
-                    if (x+width > 1080) {
-                        Toast.makeText(context, "[1-2] Frog Dead - The End", Toast.LENGTH_SHORT).show()
-                        dead()
+                    if (x + width <= 1080) {
+                        x += frogSpeed
+                        if (x + width > 1080F) {
+                            Toast.makeText(context, "[1-2] Frog Dead - The End", Toast.LENGTH_SHORT)
+                                .show()
+                            dead()
+                        }
                     }
+
                 } else {
-                    x += frogSpeed
-                    if (x < 0) {
-                        Toast.makeText(context, "[1-1] Frog Dead - The End", Toast.LENGTH_SHORT).show()
-                        dead()
+                    if (x >= 0) {
+                        x += frogSpeed
+                        if (x < 0F) {
+                            Toast.makeText(context, "[1-1] Frog Dead - The End", Toast.LENGTH_SHORT)
+                                .show()
+                            dead()
+                        }
                     }
+
                 }
                 handler.postDelayed(this, 10)
             }
+
+
         }
     }
 
