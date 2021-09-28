@@ -22,8 +22,7 @@ class Crokerdail(context: Context) :
     override fun move(speed: Int) {
         this.speed = speed
         val handler = Handler()
-
-        val r: Runnable = object : Runnable {
+        handler.post(object : Runnable {
             override fun run() {
                 if (speed > 0) {
                     x += speed
@@ -32,15 +31,13 @@ class Crokerdail(context: Context) :
                     }
                 } else {
                     x += speed
-                    if (x+width < 0) {
+                    if (x + width < 0) {
                         x = 1080F
                     }
                 }
-
                 handler.postDelayed(this, 10)
             }
-        }
-        handler.postDelayed(r, 1000)
+        })
     }
 
     fun isHead(lFrog: Float, rFrog: Float): Boolean {

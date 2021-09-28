@@ -17,7 +17,7 @@ class Tree(context: Context) : androidx.appcompat.widget.AppCompatImageView(cont
         this.speed = speed
 
         val handler = Handler()
-        handler.postDelayed(object : Runnable {
+        handler.post(object : Runnable {
             override fun run() {
                 if (speed > 0) {
                     x += speed
@@ -32,6 +32,6 @@ class Tree(context: Context) : androidx.appcompat.widget.AppCompatImageView(cont
                 }
                 handler.postDelayed(this, 10)
             }
-        }, 1000)
+        })
     }
 }

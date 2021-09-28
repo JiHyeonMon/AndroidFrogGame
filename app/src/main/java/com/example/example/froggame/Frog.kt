@@ -17,6 +17,8 @@ class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(cont
         setImageResource(R.drawable.frog)
         setBackgroundColor(Color.WHITE)
         scaleType = ScaleType.CENTER_CROP
+        y = 1055f
+        x = 450f
 
         r = object : Runnable {
             override fun run() {

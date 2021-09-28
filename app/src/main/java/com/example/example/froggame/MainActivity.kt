@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
     var jumpCnt = 6
     var height = 0
 
-    lateinit var frog1: Frog
+    lateinit var frog: Frog
 
     lateinit var score: TextView
     lateinit var lives: TextView
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         gameStart()
 
         btnJump.setOnClickListener {
-            frog1.jump(height)
+            frog.jump(height)
 
             jumpCnt -= 1
 
@@ -65,24 +65,24 @@ class MainActivity : AppCompatActivity() {
                     checkFrog(tree1InLayout6, tree2InLayout6, crokerdailInLayout6)
                 }
                 4 -> {
-                    frog1.handler.removeCallbacks(frog1.r)
+                    frog.handler.removeCallbacks(frog.r)
                     checkFrog(tree1InLayout5, tree2InLayout5, crokerdailInLayout5)
                 }
                 3 -> {
-                    frog1.handler.removeCallbacks(frog1.r)
-                    snake1.checkFrog(frog1.x, frog1.x + frog1.width, notification)
-                    snake2.checkFrog(frog1.x, frog1.x + frog1.width, notification)
+                    frog.handler.removeCallbacks(frog.r)
+                    snake1.checkFrog(frog.x, frog.x + frog.width, notification)
+                    snake2.checkFrog(frog.x, frog.x + frog.width, notification)
                 }
                 2 -> {
-                    frog1.handler.removeCallbacks(frog1.r)
+                    frog.handler.removeCallbacks(frog.r)
                     checkFrog(tree1InLayout3, tree2InLayout3, crokerdailInLayout3)
                 }
                 1 -> {
-                    frog1.handler.removeCallbacks(frog1.r)
+                    frog.handler.removeCallbacks(frog.r)
                     checkFrog(tree1InLayout2, tree2InLayout2, crokerdailInLayout2)
                 }
                 0 -> {
-                    frog1.handler.removeCallbacks(frog1.r)
+                    frog.handler.removeCallbacks(frog.r)
                     checkScore()
                 }
             }
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
         layout6 = findViewById(R.id.layout6)
         layout7 = findViewById(R.id.layout7)
         layout = findViewById(R.id.layout)
-        btnJump = findViewById<Button>(R.id.btnJump)
+        btnJump = findViewById(R.id.btnJump)
 
         score = findViewById(R.id.textScore)
         lives = findViewById(R.id.textLives)
@@ -130,14 +130,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setFrog() {
-        frog1 = Frog(this)
-        frog1.setCallback(notification)
+        frog = Frog(this)
+        frog.setCallback(notification)
 
-        frog1.layoutParams = ViewGroup.LayoutParams(120, 120)
+        frog.layoutParams = ViewGroup.LayoutParams(120, 120)
 
-        layout.addView(frog1)
-        frog1.y = 1055f
-        frog1.x = 450f
+        layout.addView(frog)
     }
 
     private fun setSnake() {
@@ -232,29 +230,29 @@ class MainActivity : AppCompatActivity() {
     private fun checkFrog(tree1: Tree, tree2: Tree, crokerdail: Crokerdail) {
         // 캐릭터들 속도 랜덤 - 캐릭터들 겹쳐있을 경우 올라타는 순서가 조건문 순서
         // 캐릭터들 생성 속도가 tree1 > tree2 > crokerdail 순서라 역순으로 조건문 형성 - 겹칠 경우 제일 위로 오는 순서
-        if (frog1.x >= crokerdail.x &&
-            frog1.x + frog1.width <= crokerdail.x + crokerdail.width
+        if (frog.x >= crokerdail.x &&
+            frog.x + frog.width <= crokerdail.x + crokerdail.width
         ) {
-            if (crokerdail.isHead(frog1.x, frog1.x+frog1.width)) {
+            if (crokerdail.isHead(frog.x, frog.x+frog.width)) {
                 notification.frogDead("crokerdail")
             } else {
-                frog1.move(crokerdail.getSpeed())
+                frog.move(crokerdail.getSpeed())
             }
-        }else if (frog1.x >= tree2.x &&
-            frog1.x + frog1.width <= tree2.x + tree2.width
+        }else if (frog.x >= tree2.x &&
+            frog.x + frog.width <= tree2.x + tree2.width
         ) {
-            frog1.move(tree2.getSpeed())
-        } else if (frog1.x >= tree1.x &&
-            frog1.x + frog1.width <= tree1.x + tree1.width
+            frog.move(tree2.getSpeed())
+        } else if (frog.x >= tree1.x &&
+            frog.x + frog.width <= tree1.x + tree1.width
         ) {
-            frog1.move(tree1.getSpeed())
+            frog.move(tree1.getSpeed())
         }  else {
             notification.frogDead("drown")
         }
     }
 
     private fun checkScore() {
-        if ((frog1.x > panel1.left && frog1.x + frog1.width < panel1.right) || (frog1.x > panel2.left && frog1.x + frog1.width < panel2.right) || (frog1.x > panel3.left && frog1.x + frog1.width < panel3.right)) {
+        if ((frog.x > panel1.left && frog.x + frog.width < panel1.right) || (frog.x > panel2.left && frog.x + frog.width < panel2.right) || (frog.x > panel3.left && frog.x + frog.width < panel3.right)) {
             // in - 점수 획득
             score.text = (score.text.toString().toInt() + 1).toString()
             restart()
@@ -266,7 +264,7 @@ class MainActivity : AppCompatActivity() {
 
     private val notification = object : Notification {
         override fun frogDead(cause: String) {
-            frog1.visibility = View.GONE
+            frog.visibility = View.GONE
             lives.text = (lives.text.toString().toInt() - 1).toString()
 
             when (cause) {
