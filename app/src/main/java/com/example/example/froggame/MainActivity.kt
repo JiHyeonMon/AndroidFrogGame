@@ -11,14 +11,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     var jumpCnt = 6
-
-    private var height = 0
-    private var width = 0
+    var height = 0
 
     lateinit var frog1: Frog
 
-    private lateinit var score: TextView
+    lateinit var score: TextView
     lateinit var lives: TextView
+    lateinit var btnJump: Button
 
     lateinit var layout1: ConstraintLayout
     lateinit var layout2: LinearLayout
@@ -53,27 +52,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        layout1 = findViewById(R.id.layout1)
-        layout2 = findViewById(R.id.layout2)
-        layout3 = findViewById(R.id.layout3)
-        layout4 = findViewById(R.id.layout4)
-        layout5 = findViewById(R.id.layout5)
-        layout6 = findViewById(R.id.layout6)
-        layout7 = findViewById(R.id.layout7)
-        layout = findViewById(R.id.layout)
-
-        score = findViewById(R.id.textScore)
-        lives = findViewById(R.id.textLives)
-
-        score.text = "0"
-        lives.text = "4"
-
-        val btnJump = findViewById<Button>(R.id.btnJump)
-
+        initial()
         gameStart()
 
         btnJump.setOnClickListener {
-            frog1.y -= height
+            frog1.jump(height)
 
             jumpCnt -= 1
 
@@ -109,7 +92,24 @@ class MainActivity : AppCompatActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         height = layout2.measuredHeight
-        width = layout2.measuredWidth
+    }
+
+    private fun initial() {
+        layout1 = findViewById(R.id.layout1)
+        layout2 = findViewById(R.id.layout2)
+        layout3 = findViewById(R.id.layout3)
+        layout4 = findViewById(R.id.layout4)
+        layout5 = findViewById(R.id.layout5)
+        layout6 = findViewById(R.id.layout6)
+        layout7 = findViewById(R.id.layout7)
+        layout = findViewById(R.id.layout)
+        btnJump = findViewById<Button>(R.id.btnJump)
+
+        score = findViewById(R.id.textScore)
+        lives = findViewById(R.id.textLives)
+
+        score.text = "0"
+        lives.text = "4"
     }
 
     private fun gameStart() {
@@ -139,7 +139,6 @@ class MainActivity : AppCompatActivity() {
         frog1.y = 1055f
         frog1.x = 450f
     }
-
 
     private fun setSnake() {
         snake1 = Snake(this)

@@ -19,20 +19,18 @@ class Tree(context: Context) : androidx.appcompat.widget.AppCompatImageView(cont
         val handler = Handler()
         handler.postDelayed(object : Runnable {
             override fun run() {
-                if (true) {
-                    if (speed > 0) {
-                        x += speed
-                        if (x > 1080) {
-                            x = 0F - width
-                        }
-                    } else {
-                        x += speed
-                        if (x+width < 0) {
-                            x = 1080F
-                        }
+                if (speed > 0) {
+                    x += speed
+                    if (x > 1080) {
+                        x = 0F - width
                     }
-                    handler.postDelayed(this, 10)
+                } else {
+                    x += speed
+                    if (x + width < 0) {
+                        x = 1080F
+                    }
                 }
+                handler.postDelayed(this, 10)
             }
         }, 1000)
     }

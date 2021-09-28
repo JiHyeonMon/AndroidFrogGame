@@ -50,6 +50,10 @@ class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(cont
         handler.post(r)
     }
 
+    fun jump(h: Int) {
+        this.y -= h
+    }
+
     fun setCallback(notification: Notification) {
         this.mNotification = notification
     }
