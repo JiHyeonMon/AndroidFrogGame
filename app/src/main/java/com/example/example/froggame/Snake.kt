@@ -1,23 +1,21 @@
 package com.example.example.froggame
 
 import android.content.Context
-import android.widget.ImageView
-import android.widget.Toast
 
-class Snake(context: Context) : androidx.appcompat.widget.AppCompatImageView(context), MainActivity.check {
+class Snake(context: Context) : androidx.appcompat.widget.AppCompatImageView(context){
 
     init {
         setImageResource(R.drawable.snake)
-        x = (0..1080).random().toFloat()
+        relocate()
     }
 
-    override fun check(xF: Int, wF:Int) {
-        if (xF>x){
-            Toast.makeText(context, "frog is bigger", Toast.LENGTH_SHORT).show()
-        }
-        Toast.makeText(context, "$xF  $x", Toast.LENGTH_SHORT).show()
-
+    fun checkFrog(lFrog: Float, rFrog:Float, notification: Notification) {
+        if ((this.x<rFrog && this.x+this.width>rFrog) || (this.x+this.width>lFrog && this.x<lFrog)){
+            notification.frogDead("snake")
+        } else return
     }
 
-
+    fun relocate() {
+        x = (0..1080-width).random().toFloat()
+    }
 }

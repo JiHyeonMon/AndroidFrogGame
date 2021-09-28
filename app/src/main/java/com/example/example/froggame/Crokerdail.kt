@@ -1,24 +1,28 @@
 package com.example.example.froggame
 
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.os.Handler
-import android.view.animation.AnimationUtils
 
-class Crokerdail(context: Context, reverse: Boolean) :
-    androidx.appcompat.widget.AppCompatImageView(context) {
+class Crokerdail(context: Context) :
+    androidx.appcompat.widget.AppCompatImageView(context), Movement {
+    private var speed = 0
+    private var reverse: Boolean = false
+
+    constructor(context: Context, reverse: Boolean): this(context) {
+        this.reverse = reverse
+        rotationY = 180F
+    }
 
     init {
         setImageResource(R.drawable.crokerdail)
-        if (reverse) {
-            rotationY = 180F
-        }
     }
 
-    fun move(speed: Int) {
-        val handler = Handler()
+    fun getSpeed(): Int = this.speed
 
-        val r: Runnable = object : Runnable {
+    override fun move(speed: Int) {
+        this.speed = speed
+        val handler = Handler()
+        handler.post(object : Runnable {
             override fun run() {
                 if (speed > 0) {
                     x += speed
@@ -27,16 +31,23 @@ class Crokerdail(context: Context, reverse: Boolean) :
                     }
                 } else {
                     x += speed
-                    if (x+width < 0) {
+                    if (x + width < 0) {
                         x = 1080F
                     }
                 }
-
                 handler.postDelayed(this, 10)
             }
+        })
+    }
+
+    fun isHead(lFrog: Float, rFrog: Float): Boolean {
+        if (this.reverse) {
+            // isTrue - 머리가 왼쪽
+            if (lFrog>=this.x && lFrog<this.x+this.width/3) return true
+        } else {
+            // 머리가 오른쪽
+            if (rFrog<this.x+this.width && rFrog>this.x+this.width*2/3) return true
         }
-
-        handler.postDelayed(r, 1000)
-
+        return false
     }
 }

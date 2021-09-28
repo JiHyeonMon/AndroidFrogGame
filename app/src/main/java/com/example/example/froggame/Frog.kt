@@ -1,56 +1,66 @@
 package com.example.example.froggame
 
 import android.content.Context
-import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Handler
-import android.R
-import android.content.res.Resources
-
-import android.graphics.BitmapFactory
-
-import android.graphics.Bitmap
-import android.os.Parcel
-import android.os.Parcelable
-import android.view.View
-import android.widget.ImageView
+import android.util.Log
 
 
-class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(context) {
+class Frog(context: Context) : androidx.appcompat.widget.AppCompatImageView(context),
+    Movement {
 
+    var r: Runnable
+    private var speed = 0
+    lateinit var mNotification: Notification
 
     init {
-//        setImageResource(R.drawable.frog)
-    }
+        setImageResource(R.drawable.frog)
+        setBackgroundColor(Color.WHITE)
+        scaleType = ScaleType.CENTER_CROP
+        y = 1055f
+        x = 450f
 
-    fun jump(location: Float, h: Int) {
-        x = location
-        y -= h
-        invalidate()
-    }
-
-    fun move(speed: Int) {
-        val handler = Handler()
-
-        val r: Runnable = object : Runnable {
+        r = object : Runnable {
             override fun run() {
+                Log.e("frog Speed", "$speed")
                 if (speed > 0) {
-                    x += speed
-                    if (x > 1080) {
-                        x = 0F - width
+                    if (x + width <= 1080) {
+                        x += speed
+                        if (x + width > 1080F) {
+                            dead("right")
+                        }
                     }
                 } else {
-                    x += speed
-                    if (x+width < 0) {
-                        x = 1080F
+                    if (x >= 0) {
+                        x += speed
+                        if (x < 0F) {
+                            dead("left")
+                        }
                     }
-                }
 
+                }
                 handler.postDelayed(this, 10)
             }
         }
-
-        handler.postDelayed(r, 1000)
-
     }
 
+    override fun move(speed: Int) {
+        this.speed = speed
+        Log.e("in move", "$speed")
+
+        val handler = Handler()
+        handler.post(r)
+    }
+
+    fun jump(h: Int) {
+        this.y -= h
+    }
+
+    fun setCallback(notification: Notification) {
+        this.mNotification = notification
+    }
+
+    fun dead(direction: String) {
+        this.mNotification.frogDead(direction)
+    }
 }
