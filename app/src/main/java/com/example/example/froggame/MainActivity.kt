@@ -70,8 +70,8 @@ class MainActivity : AppCompatActivity() {
                 }
                 3 -> {
                     frog.handler.removeCallbacks(frog.r)
-                    snake1.checkFrog(frog.x, frog.x + frog.width, notification)
-                    snake2.checkFrog(frog.x, frog.x + frog.width, notification)
+                    snake1.checkFrog(frog.x, frog.x + frog.width)
+                    snake2.checkFrog(frog.x, frog.x + frog.width)
                 }
                 2 -> {
                     frog.handler.removeCallbacks(frog.r)
@@ -133,14 +133,15 @@ class MainActivity : AppCompatActivity() {
         frog = Frog(this)
         frog.setCallback(notification)
 
-        frog.layoutParams = ViewGroup.LayoutParams(120, 120)
-
-        layout.addView(frog)
+        layout.addView(frog, 120, 120)
     }
 
     private fun setSnake() {
         snake1 = Snake(this)
         snake2 = Snake(this)
+
+        snake1.setCallback(notification)
+        snake2.setCallback(notification)
 
         layout4.addView(snake1, 175, 175)
         layout4.addView(snake2, 175, 175)
