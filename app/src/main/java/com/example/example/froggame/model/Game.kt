@@ -13,6 +13,10 @@ class Game() {
         return true
     }
 
+    fun move() {
+
+    }
+
     fun isScore() {
 
     }

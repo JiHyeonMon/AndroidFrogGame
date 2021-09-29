@@ -9,6 +9,10 @@ class River() {
 
     }
 
+    fun flow() {
+
+    }
+
     fun isCrocodileHead() {
 
     }

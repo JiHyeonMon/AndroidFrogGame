@@ -1,10 +1,10 @@
 package com.example.example.froggame.controller
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.example.froggame.R
 import com.example.example.froggame.model.Frog
@@ -37,11 +37,13 @@ class MainActivity : AppCompatActivity() {
         initial()
 
         game = Game()
-        while(lives.text.toString().toInt() > 0) (
-                game.gameStart()
-                )
+        while (lives.text.toString().toInt() > 0) {
+            game.gameStart()
+        }
 
-
+//        Action
+//        Check
+//        Update
         btnJump.setOnClickListener {
             frog.jump(height)
         }
