@@ -64,6 +64,22 @@
         app:layout_constraintTop_toBottomOf="@id/layout1"
         app:layout_constraintBottom_toTopOf="@id/layout3">
 
+        <ImageView
+            android:id="@+id/timber1InLayout2"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/timber"/>
+
+        <ImageView
+            android:id="@+id/crocodileInLayout2"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/crokerdail"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -76,6 +92,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout2"
         app:layout_constraintBottom_toTopOf="@id/layout4">
+
+        <ImageView
+            android:id="@+id/timber1InLayout3"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/timber"/>
+
+        <ImageView
+            android:id="@+id/crocodileInLayout3"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/crokerdail"/>
 
     </LinearLayout>
 
@@ -98,11 +130,26 @@
         android:layout_height="0dp"
         android:background="@color/blue"
         android:orientation="horizontal"
-        android:layoutDirection="rtl"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout4"
         app:layout_constraintBottom_toTopOf="@id/layout6">
+
+        <ImageView
+            android:id="@+id/timber1InLayout5"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/timber"/>
+
+        <ImageView
+            android:id="@+id/crocodileInLayout5"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/crokerdail"/>
 
     </LinearLayout>
 
@@ -116,6 +163,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout5"
         app:layout_constraintBottom_toTopOf="@id/layout7">
+        <ImageView
+            android:id="@+id/timber1InLayout6"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/timber"/>
+
+        <ImageView
+            android:id="@+id/crocodileInLayout6"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/crokerdail"/>
 
     </LinearLayout>
 
@@ -127,7 +189,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout6"
-        app:layout_constraintBottom_toTopOf="@id/layout8">
+        app:layout_constraintBottom_toTopOf="@id/layout8"
+        android:orientation="horizontal">
+
 
     </LinearLayout>
 
@@ -193,5 +257,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/frogImage"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/frog"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,21 +3,17 @@ package com.example.example.froggame.model
 class Timber {
 
     private var left: Float = 0f
-    private var right: Float = 0f
+    val width = 341
 
     fun getLeft(): Float {
-        return this.left
+        return left
     }
 
     fun getRight(): Float {
-        return this.right
+        return left + width
     }
 
     fun setLeft(l: Float) {
         this.left = l
-    }
-
-    fun getRight(r: Float) {
-        this.right = r
     }
 }
