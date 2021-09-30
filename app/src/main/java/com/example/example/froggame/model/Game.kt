@@ -6,6 +6,7 @@ import android.util.Log
 class Game {
 
     enum class GameState { IN_PROGRESS, GAMEOVER, FINISHED }
+    enum class ScoreState { SUCCESS, FAIL }
 
     lateinit var state: GameState
 
@@ -82,7 +83,7 @@ class Game {
         for (i in 0 until snakeNumber) {
             if ((snakes[i].getLeft() < frog.getRight() && snakes[i].getRight() > frog.getRight()) || (snakes[i].getRight() > frog.getLeft() && snakes[i].getLeft() < frog.getLeft())) {
                 Log.e("Game - isFrogMeetSnake", "[DEAD] Frog is eaten by Snake")
-                gameOver()
+                gameOver(ScoreState.FAIL)
                 return true
             }
         }
@@ -100,7 +101,7 @@ class Game {
                         "Game - isFrogGetIn",
                         "[DEAD] Frog is eaten by crocodile - The Crocodile's head direction is left (reverse)"
                     )
-                    gameOver()
+                    gameOver(ScoreState.FAIL)
                 } else frogMove(river.getSpeed(), river.getDirection())
             } else {
                 // 악어 머리가 오른쪽
@@ -109,7 +110,7 @@ class Game {
                         "Game - isFrogGetIn",
                         "[DEAD] Frog is eaten by crocodile - The Crocodile's head direction is right (default)"
                     )
-                    gameOver()
+                    gameOver(ScoreState.FAIL)
                 } else frogMove(river.getSpeed(), river.getDirection())
             }
 
@@ -118,10 +119,15 @@ class Game {
         ) {
             Log.e("Game - isFrogGetIn", "Frog get on the Timber")
             frogMove(river.getSpeed(), river.getDirection())
+        } else if (frog.getLeft() >= river.timber2.getLeft() &&
+            frog.getRight() <= river.timber2.getRight()
+        ) {
+            Log.e("Game - isFrogGetIn", "Frog get on the Timber")
+            frogMove(river.getSpeed(), river.getDirection())
         } else {
             // 물에 빠짐
             Log.e("Game - isFrogGetIn", "[DEAD] Frog is drown")
-            gameOver()
+            gameOver(ScoreState.FAIL)
         }
     }
 
@@ -132,12 +138,12 @@ class Game {
             override fun run() {
                 if (frog.getRight() > 1080) {
                     Log.e("Game - frogMove", "[DEAD] Frog bump into Right Wall")
-                    gameOver()
+                    gameOver(ScoreState.FAIL)
                     return
                 }
                 if (frog.getLeft() < 0) {
                     Log.e("Game - frogMove", "[DEAD] Frog bump into left Wall")
-                    gameOver()
+                    gameOver(ScoreState.FAIL)
                     return
                 }
                 frog.setLeft(frog.getLeft() + speed * direction)
@@ -150,26 +156,22 @@ class Game {
 
     private fun isScore() {
         val boards = land.getBoards()
-
-        Log.e("score", "${boards[0].getLeft()} ${boards[0].getRight()} ${frog.getLeft()} ${frog.getRight()}")
-        Log.e("score", "${boards[1].getLeft()} ${boards[1].getRight()} ${frog.getLeft()} ${frog.getRight()}")
-        Log.e("score", "${boards[2].getLeft()} ${boards[2].getRight()} ${frog.getLeft()} ${frog.getRight()}")
-
         if ((boards[0].getLeft() < frog.getLeft() && frog.getRight() < boards[0].getRight())||
             (boards[1].getLeft() < frog.getLeft() && frog.getRight() < boards[1].getRight())||
             (boards[2].getLeft() < frog.getLeft() && frog.getRight() < boards[2].getRight())){
                 // 점수 획득
             Log.e("Game - isScore", "[SCORE] SUCCESS")
             score += 1
+            gameOver(ScoreState.SUCCESS)
         } else {
             // 점수판에 못오르고 물에 빠짐
             Log.e("Game - isScore", "[DEAD] Frog is drown")
-            gameOver()
+            gameOver(ScoreState.FAIL)
         }
     }
 
-    private fun gameOver() {
-        step -= 1
+    private fun gameOver(scoreState: ScoreState) {
+        if (scoreState == ScoreState.FAIL) step -= 1
         if (step == 0) {
             finish()
         }

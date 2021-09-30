@@ -166,7 +166,7 @@ class MainActivity : AppCompatActivity() {
 
                 //frog
                 frogImage.y = game.frog.getY()
-//                frogImage.x = game.frog.getLeft()
+                frogImage.x = game.frog.getLeft()
 
                 //timber
                 timber1InLayout2.x = game.river1.timber1.getLeft()
@@ -184,22 +184,21 @@ class MainActivity : AppCompatActivity() {
                 crocodileInLayout5.x = game.river3.crocodile.getLeft()
                 crocodileInLayout6.x = game.river4.crocodile.getLeft()
 
-                //score
-                score.text = game.score.toString()
-
                 handler.postDelayed(this, 5)
             }
         })
     }
 
     fun gameRestart() {
-        lives.text = (lives.text.toString().toInt() - 1).toString()
+        //score
+        score.text = game.score.toString()
+        lives.text = game.step.toString()
 
         // 게임 끝나고 뱀 다시 그려야 함
         // 기존에 동적으로 addView로 뱀을 추가한 layout4 내부의 뱀을 지운다.
         layout4.removeAllViewsInLayout()
         layout1.removeAllViews()
-        Toast.makeText(this@MainActivity, "FROG DEAD", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@MainActivity, "GAME OVER", Toast.LENGTH_SHORT).show()
 
         // 게임 재시작
         game.gameStart()
