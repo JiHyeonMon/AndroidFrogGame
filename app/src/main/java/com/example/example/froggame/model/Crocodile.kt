@@ -17,11 +17,11 @@ class Crocodile {
         return if (reverse) {
             // 머리가 왼쪽
             // 악어의 머리 = 왼쪽 ~ 몸통의 1/3
-            arrayOf(left, left+width*1/3)
+            arrayOf(left, left + width * 1 / 4)
         } else {
             // 머리가 오른쪽
             // 악어의 머리 = 악어 몸통의 2/3 ~ 오른쪽 끝까지
-            arrayOf(left+width*2/3, left+width)
+            arrayOf(left + width * 3 / 4, left + width)
         }
     }
 
@@ -30,7 +30,7 @@ class Crocodile {
     }
 
     fun getRight(): Float {
-        return left+width
+        return getLeft() + width
     }
 
     fun setLeft(l: Float) {

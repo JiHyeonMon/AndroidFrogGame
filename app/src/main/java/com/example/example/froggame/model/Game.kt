@@ -1,13 +1,18 @@
 package com.example.example.froggame.model
 
+import android.os.Handler
 import android.util.Log
 
 class Game {
 
-    enum class GameState { IN_PROGRESS, FINISHED }
+    enum class GameState { IN_PROGRESS, GAMEOVER, FINISHED }
+
     lateinit var state: GameState
 
     var jumpCnt = 6
+    var score = 0
+    var step = 4
+
     val frog = Frog()
     val land = Land()
 
@@ -20,6 +25,9 @@ class Game {
     val river2 = River(true)
     val river3 = River()
     val river4 = River(true)
+
+    var handler = Handler()
+    lateinit var r: Runnable
 
 
     fun gameStart() {
@@ -34,35 +42,41 @@ class Game {
         land.setLand()
     }
 
+
     fun frogJump(h: Int) {
         frog.jump(h)
         jumpCnt -= 1
         when (jumpCnt) {
-            5 -> isFrogGetIn(river4)
+
+            // why frog.stop() all times?
+            // to do reset r - speed 0
+            5 -> {
+                isFrogGetIn(river4)
+            }
             4 -> {
-                frog.stop()
+                handler.removeCallbacks(r)
                 isFrogGetIn(river3)
             }
             3 -> {
-                frog.stop()
+                handler.removeCallbacks(r)
                 isFrogMeetSnake()
             }
             2 -> {
-                frog.stop()
+                handler.removeCallbacks(r)
                 isFrogGetIn(river2)
             }
             1 -> {
-                frog.stop()
+                handler.removeCallbacks(r)
                 isFrogGetIn(river1)
             }
             0 -> {
-                frog.stop()
+                handler.removeCallbacks(r)
                 isScore()
             }
         }
     }
 
-    fun isFrogMeetSnake(): Boolean {
+    private fun isFrogMeetSnake(): Boolean {
         val snakes = land.getSnakes()
         val snakeNumber = land.getNum()
         for (i in 0 until snakeNumber) {
@@ -75,29 +89,35 @@ class Game {
         return false
     }
 
-    fun isFrogGetIn(river: River) {
+    private fun isFrogGetIn(river: River) {
         if (frog.getLeft() >= river.crocodile.getLeft() && frog.getRight() <= river.crocodile.getRight()) {
             val crocodileHead = river.crocodile.getHead()
 
             // 악어의 머리가 왼쪽
             if (river.crocodile.reverse) {
-                if (frog.getLeft()<crocodileHead[1]) {
-                    Log.e("Game - isFrogGetIn", "[DEAD] Frog is eaten by crocodile - The Crocodile's head direction is left (reverse)")
+                if (frog.getLeft() < crocodileHead[1]) {
+                    Log.e(
+                        "Game - isFrogGetIn",
+                        "[DEAD] Frog is eaten by crocodile - The Crocodile's head direction is left (reverse)"
+                    )
                     gameOver()
-                } else frog.move(river.getSpeed(), river.getDirection())
+                } else frogMove(river.getSpeed(), river.getDirection())
             } else {
                 // 악어 머리가 오른쪽
-                if (frog.getRight()>crocodileHead[0]) {
-                    Log.e("Game - isFrogGetIn", "[DEAD] Frog is eaten by crocodile - The Crocodile's head direction is right (default)")
+                if (frog.getRight() > crocodileHead[0]) {
+                    Log.e(
+                        "Game - isFrogGetIn",
+                        "[DEAD] Frog is eaten by crocodile - The Crocodile's head direction is right (default)"
+                    )
                     gameOver()
-                } else frog.move(river.getSpeed(), river.getDirection())
+                } else frogMove(river.getSpeed(), river.getDirection())
             }
 
         } else if (frog.getLeft() >= river.timber1.getLeft() &&
             frog.getRight() <= river.timber1.getRight()
         ) {
             Log.e("Game - isFrogGetIn", "Frog get on the Timber")
-            frog.move(river.getSpeed(), river.getDirection())
+            frogMove(river.getSpeed(), river.getDirection())
         } else {
             // 물에 빠짐
             Log.e("Game - isFrogGetIn", "[DEAD] Frog is drown")
@@ -105,12 +125,69 @@ class Game {
         }
     }
 
+    fun frogMove(speed: Int, direction: Int) {
+        handler = Handler()
+
+        r = object : Runnable {
+            override fun run() {
+                if (frog.getRight() > 1080) {
+                    Log.e("Game - frogMove", "[DEAD] Frog bump into Right Wall")
+                    gameOver()
+                    return
+                }
+                if (frog.getLeft() < 0) {
+                    Log.e("Game - frogMove", "[DEAD] Frog bump into left Wall")
+                    gameOver()
+                    return
+                }
+                frog.setLeft(frog.getLeft() + speed * direction)
+                handler.postDelayed(this, 10)
+            }
+        }
+        handler.post(r)
+    }
+
+
     private fun isScore() {
-        
+        val boards = land.getBoards()
+
+        Log.e("score", "${boards[0].getLeft()} ${boards[0].getRight()} ${frog.getLeft()} ${frog.getRight()}")
+        Log.e("score", "${boards[1].getLeft()} ${boards[1].getRight()} ${frog.getLeft()} ${frog.getRight()}")
+        Log.e("score", "${boards[2].getLeft()} ${boards[2].getRight()} ${frog.getLeft()} ${frog.getRight()}")
+
+        if ((boards[0].getLeft() < frog.getLeft() && frog.getRight() < boards[0].getRight())||
+            (boards[1].getLeft() < frog.getLeft() && frog.getRight() < boards[1].getRight())||
+            (boards[2].getLeft() < frog.getLeft() && frog.getRight() < boards[2].getRight())){
+                // 점수 획득
+            Log.e("Game - isScore", "[SCORE] SUCCESS")
+            score += 1
+        } else {
+            // 점수판에 못오르고 물에 빠짐
+            Log.e("Game - isScore", "[DEAD] Frog is drown")
+            gameOver()
+        }
     }
 
     private fun gameOver() {
-        frog.move(0,0)
+        step -= 1
+        if (step == 0) {
+            finish()
+        }
+        state = GameState.GAMEOVER
+        land.clear()
+
+        river1.handler.removeCallbacks(river1.r)
+        river2.handler.removeCallbacks(river2.r)
+        river3.handler.removeCallbacks(river3.r)
+        river4.handler.removeCallbacks(river4.r)
+    }
+
+    private fun finish() {
         state = GameState.FINISHED
+        handler.removeCallbacks(r)
+        river1.handler.removeCallbacks(river1.r)
+        river2.handler.removeCallbacks(river2.r)
+        river3.handler.removeCallbacks(river3.r)
+        river4.handler.removeCallbacks(river4.r)
     }
 }

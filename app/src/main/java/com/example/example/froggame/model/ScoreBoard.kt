@@ -1,19 +1,18 @@
 package com.example.example.froggame.model
 
-class Timber {
+class ScoreBoard {
 
     private var left: Float = 0f
-    val width = 341
+
+    fun setLeft(l: Float) {
+        this.left = l
+    }
 
     fun getLeft(): Float {
         return left
     }
 
     fun getRight(): Float {
-        return getLeft() + width
-    }
-
-    fun setLeft(l: Float) {
-        this.left = l
+        return left + 180
     }
 }

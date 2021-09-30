@@ -8,16 +8,14 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.example.froggame.R
-import com.example.example.froggame.model.Frog
 import com.example.example.froggame.model.Game
 
 
 class MainActivity : AppCompatActivity() {
 
-    var height = 0
+    private var height = 0
 
     lateinit var game: Game
-    lateinit var frogModel: Frog
 
     lateinit var score: TextView
     lateinit var lives: TextView
@@ -26,19 +24,23 @@ class MainActivity : AppCompatActivity() {
     lateinit var layout1: ConstraintLayout
     lateinit var layout2: LinearLayout
     lateinit var layout3: LinearLayout
-    lateinit var layout4: LinearLayout
+    lateinit var layout4: ConstraintLayout
     lateinit var layout5: LinearLayout
     lateinit var layout6: LinearLayout
     lateinit var layout7: LinearLayout
     lateinit var layout: ConstraintLayout
 
     lateinit var timber1InLayout2: ImageView
+    lateinit var timber2InLayout2: ImageView
     lateinit var crocodileInLayout2: ImageView
     lateinit var timber1InLayout3: ImageView
+    lateinit var timber2InLayout3: ImageView
     lateinit var crocodileInLayout3: ImageView
     lateinit var timber1InLayout5: ImageView
+    lateinit var timber2InLayout5: ImageView
     lateinit var crocodileInLayout5: ImageView
     lateinit var timber1InLayout6: ImageView
+    lateinit var timber2InLayout6: ImageView
     lateinit var crocodileInLayout6: ImageView
 
     lateinit var frogImage: ImageView
@@ -47,17 +49,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        game = Game()
+
         initial()
 
-        game = Game()
         game.gameStart()
         setFrogUI()
         setSnakeUI()
+        setScoreBoardUI()
         setCrocodile()
-
-//        Action
-//        Check
-//        Update
 
         //run loop
         checkUpdate()
@@ -69,29 +69,43 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setFrogUI() {
+        val gameLayout = findViewById<View>(R.id.layout) as ConstraintLayout
+
+        frogImage = ImageView(this)
+        frogImage.setBackgroundResource(R.drawable.frog)
+        frogImage.scaleType = ImageView.ScaleType.FIT_XY
+        frogImage.layoutParams = ViewGroup.LayoutParams(150, 150)
+
+        gameLayout.addView(frogImage)
         frogImage.x = game.frog.getLeft()
         frogImage.y = game.frog.getY()
     }
 
     private fun setSnakeUI() {
-        val land = findViewById<View>(R.id.layout4) as LinearLayout
 
-        val snakeNumber = game.land.getNum()
-        var snakes = game.land.getSnakes()
+        val snakeLayout = findViewById<View>(R.id.layout4) as ConstraintLayout
+        val snakes = game.land.getSnakes()
 
-        Toast.makeText(this@MainActivity, snakeNumber.toString(), Toast.LENGTH_SHORT).show()
-
-        for (i in 0 until snakeNumber) {
+        for (item in snakes) {
             val snake = ImageView(this)
-            snake.id = View.generateViewId()
             snake.setBackgroundResource(R.drawable.snake)
-            snake.layoutParams = ViewGroup.LayoutParams(160,160)
+            snake.x = item.getLeft()
 
-            // TODO 뱀 길이 알아내야 함
+            snakeLayout.addView(snake, 180, 180)
+        }
+    }
 
-            snake.x = snakes[i].getLeft()
+    private fun setScoreBoardUI() {
 
-            land.addView(snake)
+        val scoreBoardLayout = findViewById<View>(R.id.layout1) as ConstraintLayout
+        val boards = game.land.getBoards()
+
+        for (element in boards) {
+            val panel = ImageView(this)
+            panel.setBackgroundResource(R.drawable.circle)
+            panel.x = element.getLeft()
+
+            scoreBoardLayout.addView(panel, 180, 180)
         }
     }
 
@@ -121,15 +135,17 @@ class MainActivity : AppCompatActivity() {
         btnJump = findViewById(R.id.btnJump)
 
         timber1InLayout2 = findViewById(R.id.timber1InLayout2)
+        timber2InLayout2 = findViewById(R.id.timber2InLayout2)
         crocodileInLayout2 = findViewById(R.id.crocodileInLayout2)
         timber1InLayout3 = findViewById(R.id.timber1InLayout3)
+        timber2InLayout3 = findViewById(R.id.timber2InLayout3)
         crocodileInLayout3 = findViewById(R.id.crocodileInLayout3)
         timber1InLayout5 = findViewById(R.id.timber1InLayout5)
+        timber2InLayout5 = findViewById(R.id.timber2InLayout5)
         crocodileInLayout5 = findViewById(R.id.crocodileInLayout5)
         timber1InLayout6 = findViewById(R.id.timber1InLayout6)
+        timber2InLayout6 = findViewById(R.id.timber2InLayout6)
         crocodileInLayout6 = findViewById(R.id.crocodileInLayout6)
-
-        frogImage = findViewById(R.id.frogImage)
 
         score = findViewById(R.id.textScore)
         lives = findViewById(R.id.textLives)
@@ -138,32 +154,29 @@ class MainActivity : AppCompatActivity() {
         lives.text = "4"
     }
 
-    private fun checkUpdate(){
+    private fun checkUpdate() {
         val handler = Handler()
         handler.post(object : Runnable {
             override fun run() {
 
-                if (game.state == Game.GameState.FINISHED) {
-                    // 게임 끝나고 뱀 다시 그려야 함
-                    // 기존에 동적으로 addView로 뱀을 추가한 layout4 내부의 뱀을 지운다.
-                    layout4.removeAllViews()
-                    Toast.makeText(this@MainActivity, "FROG DEAD", Toast.LENGTH_SHORT).show()
-
-                    // 게임 재시작
-                    game.gameStart()
-                    setFrogUI() // 개구리 처음 위치로 옮기기
-                    setSnakeUI() // 뱀 새로운 위치, 개수로 다시 그리기
+                if (game.state == Game.GameState.GAMEOVER) {
+                    frogImage.visibility = View.INVISIBLE
+                    gameRestart()
                 }
 
                 //frog
                 frogImage.y = game.frog.getY()
-                frogImage.x = game.frog.getLeft()
+//                frogImage.x = game.frog.getLeft()
 
                 //timber
                 timber1InLayout2.x = game.river1.timber1.getLeft()
+                timber2InLayout2.x = game.river1.timber2.getLeft()
                 timber1InLayout3.x = game.river2.timber1.getLeft()
+                timber2InLayout3.x = game.river2.timber2.getLeft()
                 timber1InLayout5.x = game.river3.timber1.getLeft()
+                timber2InLayout5.x = game.river3.timber2.getLeft()
                 timber1InLayout6.x = game.river4.timber1.getLeft()
+                timber2InLayout6.x = game.river4.timber2.getLeft()
 
                 //crocodile
                 crocodileInLayout2.x = game.river1.crocodile.getLeft()
@@ -171,8 +184,27 @@ class MainActivity : AppCompatActivity() {
                 crocodileInLayout5.x = game.river3.crocodile.getLeft()
                 crocodileInLayout6.x = game.river4.crocodile.getLeft()
 
+                //score
+                score.text = game.score.toString()
+
                 handler.postDelayed(this, 5)
             }
         })
+    }
+
+    fun gameRestart() {
+        lives.text = (lives.text.toString().toInt() - 1).toString()
+
+        // 게임 끝나고 뱀 다시 그려야 함
+        // 기존에 동적으로 addView로 뱀을 추가한 layout4 내부의 뱀을 지운다.
+        layout4.removeAllViewsInLayout()
+        layout1.removeAllViews()
+        Toast.makeText(this@MainActivity, "FROG DEAD", Toast.LENGTH_SHORT).show()
+
+        // 게임 재시작
+        game.gameStart()
+        setFrogUI() // 개구리 처음 위치로 옮기기
+        setSnakeUI() // 뱀 새로운 위치, 개수로 다시 그리기
+        setScoreBoardUI()
     }
 }

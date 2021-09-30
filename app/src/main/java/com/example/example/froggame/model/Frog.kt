@@ -7,9 +7,6 @@ class Frog {
     private var y: Float = 1040f
     private var left: Float = 450f
 
-    lateinit var r : Runnable
-    var handler = Handler()
-
     fun setFrog() {
         this.setLeft(450F)
         this.setY(1040f)
@@ -19,26 +16,12 @@ class Frog {
         this.y -= h
     }
 
-    fun move(speed: Int, direction: Int) {
-        r = object : Runnable {
-            override fun run() {
-                setLeft(getLeft() + speed * direction)
-                handler.postDelayed(this, 10)
-            }
-        }
-        handler.post(r)
-    }
-
-    fun stop() {
-        handler.removeCallbacks(r)
-    }
-
     fun getLeft(): Float {
         return this.left
     }
 
     fun getRight(): Float {
-        return this.left + 158
+        return this.left + 150
     }
 
     fun getY(): Float {
