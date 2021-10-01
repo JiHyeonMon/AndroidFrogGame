@@ -24,8 +24,8 @@ class Land {
         for (i in 0 until num) {
             snakes[i].setLeft((1..700).random().toFloat())
         }
-        boards[0].setLeft((0..200).random().toFloat())
-        boards[1].setLeft((300..500).random().toFloat())
+        boards[0].setLeft((0..100).random().toFloat())
+        boards[1].setLeft((300..400).random().toFloat())
         boards[2].setLeft((600..900).random().toFloat())
     }
 

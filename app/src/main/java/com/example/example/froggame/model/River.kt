@@ -1,7 +1,5 @@
 package com.example.example.froggame.model
 
-import android.os.Handler
-
 class River {
 
     // 강은 속력와 방향을 가진다.
@@ -14,10 +12,6 @@ class River {
     var timber1: Timber
     var timber2: Timber
     var crocodile: Crocodile
-
-    // 강이 흐르기위해 runnable 인터페이스 선언
-    lateinit var handler: Handler
-    lateinit var r: Runnable
 
     // 강을 만들 때 기본적으로 통나무 2개, 악어 한마리 생성됨.
     // 이때 좌표값을 처음에 겹치지 않게 설정위해서 초기 값을 지정해준다.
@@ -50,48 +44,39 @@ class River {
         flow()
     }
 
-    private fun flow() {
+    fun flow() {
         // 흐르기 시작
-        // handler를 통해 run함수를 10ms마다 계속 실행시켜 객체들의 위치를 계속 변경시켜 움직인다.
-        handler = Handler()
-        r = object : Runnable {
-            override fun run() {
-                if (direction > 0) {
-                    // 순방향 (왼 --> 오) 인 경우
-                    // 통나무1, 2, 악어가 오른쪽 벽을 지나 완전히 지나갔다면 해당 위치를 왼쪽으로 이동시켜 계속해서 움직일 수 있게 한다.
-                    if (timber1.getLeft() > 1080) {
-                        timber1.setLeft(0F - timber1.width)
-                    }
-                    if (timber2.getLeft() > 1080) {
-                        timber2.setLeft(0F - timber2.width)
-                    }
-                    if (crocodile.getLeft() > 1080) {
-                        crocodile.setLeft(0F - crocodile.width)
-                    }
-
-                } else {
-                    // 역방향 (오 --> 왼) 인 경우
-                    // 통나무1, 2, 악어가 왼쪽 벽을 지나 완전히 지나갔다면 해당 위치를 오른쪽으로 이동시켜 계속해서 움직일 수 있게 한다.
-                    if (timber1.getRight() < 0) {
-                        timber1.setLeft(1080f)
-                    }
-                    if (timber2.getRight() < 0) {
-                        timber2.setLeft(1080f)
-                    }
-                    if (crocodile.getRight() < 0) {
-                        crocodile.setLeft(1080f)
-                    }
-                }
-                // 통나무1, 2, 악어가 강의 속력과 방향에 맞춰 움직이게 한다.
-                timber1.setLeft(timber1.getLeft() + speed * direction)
-                timber2.setLeft(timber2.getLeft() + speed * direction)
-                crocodile.setLeft(crocodile.getLeft() + speed * direction)
-                handler.postDelayed(this, 10)
+        if (direction > 0) {
+            // 순방향 (왼 --> 오) 인 경우
+            // 통나무1, 2, 악어가 오른쪽 벽을 지나 완전히 지나갔다면 해당 위치를 왼쪽으로 이동시켜 계속해서 움직일 수 있게 한다.
+            if (timber1.getLeft() > 1080) {
+                timber1.setLeft(0F - timber1.width)
+            }
+            if (timber2.getLeft() > 1080) {
+                timber2.setLeft(0F - timber2.width)
+            }
+            if (crocodile.getLeft() > 1080) {
+                crocodile.setLeft(0F - crocodile.width)
             }
 
+        } else {
+            // 역방향 (오 --> 왼) 인 경우
+            // 통나무1, 2, 악어가 왼쪽 벽을 지나 완전히 지나갔다면 해당 위치를 오른쪽으로 이동시켜 계속해서 움직일 수 있게 한다.
+            if (timber1.getRight() < 0) {
+                timber1.setLeft(1080f)
+            }
+            if (timber2.getRight() < 0) {
+                timber2.setLeft(1080f)
+            }
+            if (crocodile.getRight() < 0) {
+                crocodile.setLeft(1080f)
+            }
         }
-        // 실제 움직이는 runnable 실행!
-        handler.post(r)
+        // 통나무1, 2, 악어가 강의 속력과 방향에 맞춰 움직이게 한다.
+        timber1.setLeft(timber1.getLeft() + speed * direction)
+        timber2.setLeft(timber2.getLeft() + speed * direction)
+        crocodile.setLeft(crocodile.getLeft() + speed * direction)
+
     }
 
     // 개구리가 강에 올라탔을 때 해당 속력과 속도로 움직이기 위해 getSpeed(), getDirection() 메서드 제공
@@ -101,6 +86,12 @@ class River {
 
     fun getDirection(): Int {
         return this.direction
+    }
+
+    // 게임이 완전히 종료됐을 때, 멈춘다.
+    fun clear() {
+        this.speed = 0
+        this.direction = 0
     }
 
 }

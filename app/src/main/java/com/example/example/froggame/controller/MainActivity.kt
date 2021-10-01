@@ -11,9 +11,10 @@ import com.example.example.froggame.R
 import com.example.example.froggame.model.Game
 
 
-class MainActivity() : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private var height = 0
+    var jumpCnt = 6
 
     lateinit var game: Game
 
@@ -60,7 +61,6 @@ class MainActivity() : AppCompatActivity() {
         // gameStart()를 통해 게임을 시작
         game = Game()
         game.gameStart()
-        game.setGameOverCallback(modelToControllerImpl)
 
         // Model에서 가져온 데이터들 화면에 보여주기 위한 코드
         // Model --> Controller --> View
@@ -70,7 +70,8 @@ class MainActivity() : AppCompatActivity() {
         setCrocodile()
 
         // run loop
-        // Handler를 통해 Controller에서 지속적으로 Model의 데이터 변화를 관찰하고 값이 변경되면 View도 변경시킨다.
+        // Handler를 통해 Controller에서 지속적으로 Action발생시 Model의 데이터 변화시키고, 변화를 관찰하고 값이 변경되면 View도 변경시킨다.
+        // View --> Controller --> Model
         // Model --> Controller --> View
         checkUpdate()
 
@@ -78,7 +79,40 @@ class MainActivity() : AppCompatActivity() {
         // 사용자가 화면에서 jump 버튼을 누르면 Controller가 Model에 점프 알리고 Model은 값을 변경시킨다.
         // View --> Controller --> Model
         btnJump.setOnClickListener {
+            // 개구리가 움직임
+            // Controller --> Model
             game.frogJump(height)
+            game.frogMove(null)
+
+            jumpCnt -= 1
+            // 점프 카운트 1, 각 단계에 맞는 로직 처리
+            when (jumpCnt) {
+                5 -> {
+                    // 강 - 개구리가 올라탔는지 확인
+                    game.isFrogGetOn(game.river4)
+                }
+                4 -> {
+                    // 강 - 개구리가 올라탔는지 확인
+                    game.isFrogGetOn(game.river3)
+                }
+                3 -> {
+                    // 땅 - 뱀과 만났는지 확인
+                    game.frogFlowOnRiver = null
+                    game.checkFrogMeetSnake()
+                }
+                2 -> {
+                    // 강 - 개구리가 올라탔는지 확인
+                    game.isFrogGetOn(game.river2)
+                }
+                1 -> {
+                    // 강 - 개구리가 올라탔는지 확인
+                    game.isFrogGetOn(game.river1)
+                }
+                0 -> {
+                    // 점수판 - 점수를 딸 수 있는지 여부 판단
+                    game.checkScore()
+                }
+            }
         }
     }
 
@@ -199,6 +233,21 @@ class MainActivity() : AppCompatActivity() {
         runnable = object : Runnable {
             override fun run() {
 
+                // Controller --> Model
+                // 강이 흐르게 함.
+                game.river1.flow()
+                game.river2.flow()
+                game.river3.flow()
+                game.river4.flow()
+
+                // 개구리가 강 위의 객체에 제대로 올라타서 움직이는가
+                // frogFlowOnRiver값이 있다면 제대로 올라탄 강이 있는거
+                if (game.frogFlowOnRiver != null) {
+                    game.frogMove(game.frogFlowOnRiver)
+                }
+
+                // Model --> Controller
+                // << Model 값 변화를 Controller에 가져와서 View 에 반영 >>
                 // 개구리가 점프를 한 경우, 개구리의 Y 값이 변했을 텐데 해당 변경된 값을 가져와 View를 업데이트.
                 // 개구리가 통나무나 악어에 올라탄 경우, 움직이며 좌표가 변한다. 해당 좌표를 추적하며 View에서의 개구리를 업데이트 시킨다.
                 frogImage.y = game.frog.getY()
@@ -222,57 +271,66 @@ class MainActivity() : AppCompatActivity() {
                 crocodileInLayout5.x = game.river3.crocodile.getLeft()
                 crocodileInLayout6.x = game.river4.crocodile.getLeft()
 
+                if (game.state != Game.GAMESTATE.IN_PROGRESS) {
+                    gameOver()
+                }
+
+                // 게임 오버 (점수획득/개구리 죽음)일 때 score, lives 값 변한다.
+                // Model의 점수, step 값이 변경되면 View 에서 반영한다.
+                score.text = game.score.toString()
+                lives.text = game.step.toString()
+
                 handler.postDelayed(this, 10)
             }
         }
         handler.post(runnable)
     }
 
-    private val modelToControllerImpl = object : ModelToControllerImpl {
-        override fun gameOver(status: Game.GAMESTATE) {
-            // Model에서 개구리 상태 변했을 때 알린다.
-            when (status) {
-                Game.GAMESTATE.SCORE -> {
-                    Toast.makeText(this@MainActivity, "점수 획득! ", Toast.LENGTH_SHORT).show()
-                }
-                Game.GAMESTATE.SNAKE -> {
-                    Toast.makeText(this@MainActivity, "[DEAD] 개구리 뱀에게 먹힘 ", Toast.LENGTH_SHORT).show()
-                }
-                Game.GAMESTATE.CROCODILE -> {
-                    Toast.makeText(this@MainActivity, "[DEAD] 개구리 악어에게 먹힘", Toast.LENGTH_SHORT).show()
-                }
-                Game.GAMESTATE.WALL -> {
-                    Toast.makeText(this@MainActivity, "[DEAD] 개구리 벽에 박치기", Toast.LENGTH_SHORT).show()
-                }
-                Game.GAMESTATE.DROWN -> {
-                    Toast.makeText(this@MainActivity, "[DEAD] 개구리 물에 빠짐", Toast.LENGTH_SHORT).show()
-                }
+    fun gameOver() {
+        // Model에서 개구리 상태 변했을 때 알린다.
+        when (game.state) {
+            Game.GAMESTATE.SCORE -> {
+                Toast.makeText(this@MainActivity, "점수 획득! ", Toast.LENGTH_SHORT).show()
             }
-
-            // 게임 오버 (점수획득/개구리 죽음)일 때 score, lives 값 변한다.
-            // Model의 점수, step 값이 변경되면 View 에서 반영한다.
-            score.text = game.score.toString()
-            lives.text = game.step.toString()
-
-            // 게임 재시작을 위한 로직.
-            // 개구리, 뱀, 점수판 다시 그려야 함.
-            // 기존에 동적으로 addView로 개구리와 뱀과 점수판을 추가했다. 게임 새로 시작하면 새로 값을 받을 테니 ViewGroup에서 addView 된 View들을 지워준다.
-            layout.removeView(frogImage)
-            layout4.removeAllViews()
-            layout1.removeAllViews()
-
-            // 게임 재시작
-            game.gameStart()
-            setFrogUI() // 개구리 생성, 처음 위치로
-            setSnakeUI() // 뱀 새로운 위치, 개수로 새로 데이터 받아와 그리기
-            setScoreBoardUI() // 점수판 새로운 위치로 새로 데이터 받아와 그리기
+            Game.GAMESTATE.SNAKE -> {
+                Toast.makeText(this@MainActivity, "[DEAD] 개구리 뱀에게 먹힘 ", Toast.LENGTH_SHORT).show()
+            }
+            Game.GAMESTATE.CROCODILE -> {
+                Toast.makeText(this@MainActivity, "[DEAD] 개구리 악어에게 먹힘", Toast.LENGTH_SHORT).show()
+            }
+            Game.GAMESTATE.WALL -> {
+                Toast.makeText(this@MainActivity, "[DEAD] 개구리 벽에 박치기", Toast.LENGTH_SHORT).show()
+            }
+            Game.GAMESTATE.DROWN -> {
+                Toast.makeText(this@MainActivity, "[DEAD] 개구리 물에 빠짐", Toast.LENGTH_SHORT).show()
+            }
+            Game.GAMESTATE.FINISHED -> gameFinish()
+            else -> Toast.makeText(this@MainActivity, "[ERROR] 알 수 없는 개구리의 죽음 ", Toast.LENGTH_SHORT).show()
         }
 
-        override fun gameFinish() {
-            // 게임 완전히 끝
-            Toast.makeText(this@MainActivity, "게임 끝 - 지금까지 개구리 게임이었습니다. :) ", Toast.LENGTH_LONG)
-                .show()
-            handler.removeCallbacks(runnable)
-        }
+        // 게임 재시작을 위한 로직.
+        // 개구리, 뱀, 점수판 다시 그려야 함.
+        // 기존에 동적으로 addView로 개구리와 뱀과 점수판을 추가했다. 게임 새로 시작하면 새로 값을 받을 테니 ViewGroup에서 addView 된 View들을 지워준다.
+        layout.removeView(frogImage)
+        layout4.removeAllViews()
+        layout1.removeAllViews()
+
+        // 게임 재시작
+        game.gameStart()
+        jumpCnt = 6
+        setFrogUI() // 개구리 생성, 처음 위치로
+        setSnakeUI() // 뱀 새로운 위치, 개수로 새로 데이터 받아와 그리기
+        setScoreBoardUI() // 점수판 새로운 위치로 새로 데이터 받아와 그리기
     }
+
+    fun gameFinish() {
+        // 완전히 게임 끝!
+        // 게임 끝났다는 토스트 메시지
+        Toast.makeText(this@MainActivity, "게임 끝 - 지금까지 개구리 게임이었습니다. :) ", Toast.LENGTH_LONG)
+            .show()
+
+        // 움직이던 핸들러 runnable 제거
+        handler.removeCallbacks(runnable)
+    }
+
 }
