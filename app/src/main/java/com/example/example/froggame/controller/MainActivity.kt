@@ -23,12 +23,12 @@ class MainActivity : AppCompatActivity() {
     lateinit var btnJump: Button
 
     lateinit var layout1: ConstraintLayout
-    lateinit var layout2: LinearLayout
-    lateinit var layout3: LinearLayout
+    lateinit var layout2: ConstraintLayout
+    lateinit var layout3: ConstraintLayout
     lateinit var layout4: ConstraintLayout
-    lateinit var layout5: LinearLayout
-    lateinit var layout6: LinearLayout
-    lateinit var layout7: LinearLayout
+    lateinit var layout5: ConstraintLayout
+    lateinit var layout6: ConstraintLayout
+    lateinit var layout7: ConstraintLayout
     lateinit var layout: ConstraintLayout
 
     lateinit var timber1InLayout2: ImageView
@@ -195,6 +195,8 @@ class MainActivity : AppCompatActivity() {
         // 개구리가 점프를 할 높이를 layout의 높이만큼으로 설정
         // 화면에 focus 얻을 때 높이를 구하여 높이를 저장
         height = layout2.measuredHeight
+
+        Toast.makeText(this, "${timber1InLayout2.measuredWidth} ${crocodileInLayout2.measuredWidth} ${timber1InLayout2.width} ${crocodileInLayout2.width}", Toast.LENGTH_SHORT).show()
     }
 
     private fun initial() {

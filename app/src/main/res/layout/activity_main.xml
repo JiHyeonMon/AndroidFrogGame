@@ -20,7 +20,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout2"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -55,9 +55,9 @@
             android:scaleType="centerCrop"
             android:src="@drawable/timber"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout3"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -92,7 +92,7 @@
             android:scaleType="centerCrop"
             android:src="@drawable/timber"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout4"
@@ -105,7 +105,7 @@
         app:layout_constraintBottom_toTopOf="@id/layout5">
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout5"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -140,9 +140,9 @@
             android:scaleType="centerCrop"
             android:src="@drawable/timber"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout6"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -177,9 +177,9 @@
             android:scaleType="centerCrop"
             android:src="@drawable/timber"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout7"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -191,7 +191,7 @@
         android:orientation="horizontal">
 
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout8"

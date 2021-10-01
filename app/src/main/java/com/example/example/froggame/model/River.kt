@@ -15,13 +15,14 @@ class River {
 
     // 강을 만들 때 기본적으로 통나무 2개, 악어 한마리 생성됨.
     // 이때 좌표값을 처음에 겹치지 않게 설정위해서 초기 값을 지정해준다.
+    // 각 객체와 겹치지 않게 떨어뜨리린다.
     constructor() {
         timber1 = Timber()
         timber2 = Timber()
         crocodile = Crocodile()
         timber1.setLeft(0f)
-        crocodile.setLeft(timber1.getLeft() - crocodile.width - 100)
-        timber2.setLeft(crocodile.getLeft() - timber2.width - 100)
+        crocodile.setLeft(timber1.getLeft() - crocodile.width - 150)
+        timber2.setLeft(crocodile.getLeft() - timber2.width - 150)
     }
 
     // 강의 흐름이 반대인 경우 (오른쪽->왼쪽으로 흐르는 경우)
@@ -32,8 +33,8 @@ class River {
         timber2 = Timber()
         crocodile = Crocodile(reverse)
         timber1.setLeft(1080f)
-        crocodile.setLeft(timber1.getRight() + 100)
-        timber2.setLeft(crocodile.getRight() + 100)
+        crocodile.setLeft(timber1.getRight() + 150)
+        timber2.setLeft(crocodile.getRight() + 150)
         this.direction = -1
 
     }
@@ -50,26 +51,26 @@ class River {
             // 순방향 (왼 --> 오) 인 경우
             // 통나무1, 2, 악어가 오른쪽 벽을 지나 완전히 지나갔다면 해당 위치를 왼쪽으로 이동시켜 계속해서 움직일 수 있게 한다.
             if (timber1.getLeft() > 1080) {
-                timber1.setLeft(0F - timber1.width)
+                timber1.setLeft(0F - timber1.width - 150)
             }
             if (timber2.getLeft() > 1080) {
-                timber2.setLeft(0F - timber2.width)
+                timber2.setLeft(crocodile.getLeft() - timber2.width - 150)
             }
             if (crocodile.getLeft() > 1080) {
-                crocodile.setLeft(0F - crocodile.width)
+                crocodile.setLeft(timber1.getLeft() - crocodile.width - 150)
             }
 
         } else {
             // 역방향 (오 --> 왼) 인 경우
             // 통나무1, 2, 악어가 왼쪽 벽을 지나 완전히 지나갔다면 해당 위치를 오른쪽으로 이동시켜 계속해서 움직일 수 있게 한다.
             if (timber1.getRight() < 0) {
-                timber1.setLeft(1080f)
+                timber1.setLeft(1080f + 150)
             }
             if (timber2.getRight() < 0) {
-                timber2.setLeft(1080f)
+                timber2.setLeft(crocodile.getRight() + 150)
             }
             if (crocodile.getRight() < 0) {
-                crocodile.setLeft(1080f)
+                crocodile.setLeft(timber1.getRight() + 150)
             }
         }
         // 통나무1, 2, 악어가 강의 속력과 방향에 맞춰 움직이게 한다.
