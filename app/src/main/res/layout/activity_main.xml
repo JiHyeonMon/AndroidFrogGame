@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".controller.MainActivity"
     android:id="@+id/layout">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,42 +18,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/layout2">
 
-        <ImageView
-            android:id="@+id/panel1"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:background="@color/brown"
-            android:src="@drawable/circle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/panel2"/>
-
-        <ImageView
-            android:id="@+id/panel2"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:background="@color/brown"
-            android:src="@drawable/circle"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/panel1"
-            app:layout_constraintEnd_toStartOf="@id/panel3"/>
-
-        <ImageView
-            android:id="@+id/panel3"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:background="@color/brown"
-            android:src="@drawable/circle"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/panel2"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout2"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -64,9 +31,33 @@
         app:layout_constraintTop_toBottomOf="@id/layout1"
         app:layout_constraintBottom_toTopOf="@id/layout3">
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/timber1InLayout2"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/timber"/>
 
-    <LinearLayout
+        <ImageView
+            android:id="@+id/crocodileInLayout2"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/crokerdail"/>
+
+        <ImageView
+            android:id="@+id/timber2InLayout2"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/timber"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout3"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -77,36 +68,81 @@
         app:layout_constraintTop_toBottomOf="@id/layout2"
         app:layout_constraintBottom_toTopOf="@id/layout4">
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/timber1InLayout3"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/timber"/>
 
-    <LinearLayout
+        <ImageView
+            android:id="@+id/crocodileInLayout3"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/crokerdail"/>
+
+        <ImageView
+            android:id="@+id/timber2InLayout3"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/timber"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout4"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:orientation="horizontal"
         android:background="@color/lightbrown"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout3"
         app:layout_constraintBottom_toTopOf="@id/layout5">
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </LinearLayout>
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout5"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/blue"
         android:orientation="horizontal"
-        android:layoutDirection="rtl"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout4"
         app:layout_constraintBottom_toTopOf="@id/layout6">
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/timber1InLayout5"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/timber"/>
 
-    <LinearLayout
+        <ImageView
+            android:id="@+id/crocodileInLayout5"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/crokerdail"/>
+
+        <ImageView
+            android:id="@+id/timber2InLayout5"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/timber"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout6"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -117,9 +153,33 @@
         app:layout_constraintTop_toBottomOf="@id/layout5"
         app:layout_constraintBottom_toTopOf="@id/layout7">
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/timber1InLayout6"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/timber"/>
 
-    <LinearLayout
+        <ImageView
+            android:id="@+id/crocodileInLayout6"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/crokerdail"/>
+
+        <ImageView
+            android:id="@+id/timber2InLayout6"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/timber"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout7"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -127,9 +187,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout6"
-        app:layout_constraintBottom_toTopOf="@id/layout8">
+        app:layout_constraintBottom_toTopOf="@id/layout8"
+        android:orientation="horizontal">
 
-    </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout8"
