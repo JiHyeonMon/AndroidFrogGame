@@ -202,7 +202,6 @@ class Game {
         if (step == 0) {
             finish()
         }
-        // 실행 중이던 runnable 종료 및 뱀 초기화.
         land.clear()
     }
 
@@ -212,7 +211,7 @@ class Game {
         Log.e("gameOver", "[FINISH] - step is $step")
         this.state = GAMESTATE.FINISHED
 
-        // 모든 runnable 해제 및 뱀 초기화.
+        // 모든 객체 초기화
         land.clear()
         river1.clear()
         river2.clear()

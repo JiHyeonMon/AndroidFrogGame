@@ -269,7 +269,6 @@ class MainActivity : AppCompatActivity() {
                 crocodileInLayout5.x = gameModel.river3.crocodile.getLeft()
                 crocodileInLayout6.x = gameModel.river4.crocodile.getLeft()
 
-                // 게임 오버 (점수획득/개구리 죽음)일 때 score, lives 값 변한다.
                 // Model의 점수, step 값이 변경되면 View 에서 반영한다.
                 score.text = gameModel.score.toString()
                 lives.text = gameModel.step.toString()
@@ -323,7 +322,7 @@ class MainActivity : AppCompatActivity() {
         setScoreBoardUI() // 점수판 새로운 위치로 새로 데이터 받아와 그리기
     }
 
-    fun gameFinish() {
+    private fun gameFinish() {
         // 완전히 게임 끝!
         // 게임 끝났다는 토스트 메시지
         Toast.makeText(this@MainActivity, "게임 끝 - 지금까지 개구리 게임이었습니다. :) ", Toast.LENGTH_LONG)
