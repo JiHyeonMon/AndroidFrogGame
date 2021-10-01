@@ -42,7 +42,6 @@ class River {
     // 강의 속력을 랜덤으로 설정하고 강 흐르기 시작!
     fun setRiver() {
         this.speed = (2..7).random()
-        flow()
     }
 
     fun flow() {

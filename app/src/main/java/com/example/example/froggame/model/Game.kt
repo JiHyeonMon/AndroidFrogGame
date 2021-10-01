@@ -38,6 +38,7 @@ class Game {
         // 게임 시작 상태인 GAMESTATE.IN_PROGRESS 설정
         state = GAMESTATE.IN_PROGRESS
 
+        // 개구리가 움직이는지 판단하는 값 - 강에 있는지 유무
         // 맨 처음 개구리는 강에 있지 않다. null --> 움직이지 않는다.
         frogFlowOnRiver = null
 
