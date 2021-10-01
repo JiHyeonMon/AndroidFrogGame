@@ -3,6 +3,7 @@ package com.example.example.froggame.model
 class ScoreBoard {
 
     private var left: Float = 0f
+    val width = 180
 
     fun setLeft(l: Float) {
         this.left = l
@@ -13,6 +14,6 @@ class ScoreBoard {
     }
 
     fun getRight(): Float {
-        return left + 180
+        return left + width
     }
 }

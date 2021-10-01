@@ -1,18 +1,20 @@
 package com.example.example.froggame.model
 
-import android.os.Handler
-
 class Frog {
 
-    private var y: Float = 1040f
-    private var left: Float = 450f
+    private var y: Float = 0f
+    private var left: Float = 0f
+    val width = 120
 
     fun setFrog() {
-        this.setLeft(450F)
-        this.setY(1040f)
+        // 개구리 처음 위치 지정
+        this.setLeft(500f)
+        this.setY(1060f)
     }
 
     fun jump(h: Int) {
+        // 개구리가 점프할 경우
+        // 개구리의 y값을 바꿔준다.
         this.y -= h
     }
 
@@ -21,7 +23,7 @@ class Frog {
     }
 
     fun getRight(): Float {
-        return this.left + 150
+        return this.left + width
     }
 
     fun getY(): Float {
@@ -32,7 +34,7 @@ class Frog {
         this.left = l
     }
 
-    fun setY(h: Float) {
+    private fun setY(h: Float) {
         this.y = h
     }
 
