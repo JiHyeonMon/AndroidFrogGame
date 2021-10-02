@@ -32,30 +32,6 @@
         app:layout_constraintTop_toBottomOf="@id/goalLayout"
         app:layout_constraintBottom_toTopOf="@id/riverLayout2">
 
-        <ImageView
-            android:id="@+id/timber1InLayout2"
-            android:layout_width="130dp"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/timber"/>
-
-        <ImageView
-            android:id="@+id/crocodileInLayout2"
-            android:layout_width="170dp"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/crokerdail"/>
-
-        <ImageView
-            android:id="@+id/timber2InLayout2"
-            android:layout_width="130dp"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/timber"/>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -69,30 +45,6 @@
         app:layout_constraintTop_toBottomOf="@id/riverLayout1"
         app:layout_constraintBottom_toTopOf="@id/landLayout">
 
-        <ImageView
-            android:id="@+id/timber1InLayout3"
-            android:layout_width="130dp"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/timber"/>
-
-        <ImageView
-            android:id="@+id/crocodileInLayout3"
-            android:layout_width="170dp"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            android:rotationY="180f"
-            android:src="@drawable/crokerdail"/>
-
-        <ImageView
-            android:id="@+id/timber2InLayout3"
-            android:layout_width="130dp"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/timber"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -118,30 +70,6 @@
         app:layout_constraintTop_toBottomOf="@id/landLayout"
         app:layout_constraintBottom_toTopOf="@id/riverLayout4">
 
-        <ImageView
-            android:id="@+id/timber1InLayout5"
-            android:layout_width="130dp"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/timber"/>
-
-        <ImageView
-            android:id="@+id/crocodileInLayout5"
-            android:layout_width="170dp"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/crokerdail"/>
-
-        <ImageView
-            android:id="@+id/timber2InLayout5"
-            android:layout_width="130dp"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/timber"/>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -154,31 +82,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/riverLayout3"
         app:layout_constraintBottom_toTopOf="@id/layout7">
-
-        <ImageView
-            android:id="@+id/timber1InLayout6"
-            android:layout_width="130dp"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/timber"/>
-
-        <ImageView
-            android:id="@+id/crocodileInLayout6"
-            android:layout_width="170dp"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            android:rotationY="180f"
-            android:src="@drawable/crokerdail"/>
-
-        <ImageView
-            android:id="@+id/timber2InLayout6"
-            android:layout_width="130dp"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/timber"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

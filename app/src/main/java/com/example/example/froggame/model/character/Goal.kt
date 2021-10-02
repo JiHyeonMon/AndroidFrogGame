@@ -5,7 +5,10 @@ import com.example.example.froggame.model.Game
 
 class Goal: Character() {
 
-    val width = 180
+//    val width = 180
+    init {
+        width = 180f
+    }
 
     override fun isFrogGetOn(lFrog: Float, rFrog: Float): Boolean {
         // 총 세개의 점수판이 있다. - 완전히 겹쳐야만 점수 인정
@@ -25,7 +28,7 @@ class Goal: Character() {
 //            gameOver(Game.GAMESTATE.DROWN)
 //        }
 
-        if (getLeft()<lFrog && rFrog<getRight()) {
+        if (left<lFrog && rFrog<right) {
             // 점수 획득
             // score + 1 시키고, SUCCESS로 게임 오버
             Log.e("Game - isScore", "[SCORE] SUCCESS")

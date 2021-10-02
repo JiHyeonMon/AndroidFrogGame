@@ -70,7 +70,7 @@ class Game {
         // 강이 흐르게 함.
 
         for (landform in landForm) {
-            if (landform == River()) {
+            if (landform is River) {
                 for (character in landform.getGameCharacter()) {
                     character.move()
                 }
@@ -101,32 +101,32 @@ class Game {
         when (jumpCnt) {
             5 -> {
                 // 강 - 개구리가 올라탔는지 확인
-                frog.setSpeed(0)
+                frog.speed = 0
                 isFrogGetOn(landForm[5] as River)
             }
             4 -> {
                 // 강 - 개구리가 올라탔는지 확인
-                frog.setSpeed(0)
+                frog.speed = 0
                 isFrogGetOn(landForm[4] as River)
             }
             3 -> {
                 // 땅 - 뱀과 만났는지 확인
-                frog.setSpeed(0)
+                frog.speed = 0
                 checkFrogMeetSnake(landForm[3] as Land)
             }
             2 -> {
                 // 강 - 개구리가 올라탔는지 확인
-                frog.setSpeed(0)
+                frog.speed = 0
                 isFrogGetOn(landForm[2] as River)
             }
             1 -> {
                 // 강 - 개구리가 올라탔는지 확인
-                frog.setSpeed(0)
+                frog.speed = 0
                 isFrogGetOn(landForm[1] as River)
             }
             0 -> {
                 // 점수판 - 점수를 딸 수 있는지 여부 판단
-                frog.setSpeed(0)
+                frog.speed = 0
                 checkScore(landForm[0])
             }
         }
@@ -140,7 +140,7 @@ class Game {
         // 반복문을 통해 하나하나 뱀들과 개구리와 위치를 확인한다.
         for (snake in land.getGameCharacter()) {
 
-            if (snake.isFrogGetOn(frog.getLeft(), frog.right)) {
+            if (snake.isFrogGetOn(frog.left, frog.right)) {
                 Log.e("Game - isFrogMeetSnake", "[DEAD] Frog is eaten by Snake")
                 gameOver(GAMESTATE.SNAKE)
                 break
@@ -153,24 +153,30 @@ class Game {
         // 어떤 강인지 River를 받는다.
         // 강마다 방향과 속력이 다르기 때문 + 해당 강의 통나무와 악어의 좌표도 필요
 
-        river.getGameCharacter()
+        var isGetOn = false
 
         for (character in river.getGameCharacter()) {
-            if (character.isFrogGetOn(frog.getLeft(), frog.getRight())) {
+            Log.e("is Frog", "${frog.left} ${frog.right} ${character.left} ${character.left+character.width}")
+            if (character.isFrogGetOn(frog.left, frog.right)) {
+                Log.e("geton", "getOn $character ${river.getSpeed()} ${river.getDirection()}")
                 // 올라탐
-                frogFlowOnRiver = river
-                frog.setSpeed(river.getSpeed())
-                frog.setDirection(river.getDirection())
+                frog.speed = river.getSpeed()
+                frog.direction = river.getDirection()
                 frog.move()
-                break
-            } else {
-                frog.setSpeed(0)
-                frog.setDirection(river.getDirection())
-                gameOver(GAMESTATE.DROWN)
+                isGetOn = true
                 break
             }
         }
-//
+
+        if (!isGetOn) {
+            Log.e("notgetOn", "getOn no")
+            frog.speed = 0
+            frog.direction = river.getDirection()
+            gameOver(GAMESTATE.DROWN)
+        }
+
+
+
 //        // 악어에 올라탔는지 판단 - 완전히 겹치는지 판단
 //        if (river.crocodile.isFrogGetOn(frog.getLeft(), frog.getRight())) {
 //            // 악어에 제대로 올라탔다.
@@ -230,7 +236,7 @@ class Game {
         // 점수판이 있는 좌표를 알기위해 land.getBoard() 메서드를 호출해 ScoreBoard 객체들을 배열로 받는다.
 
         for (goal in landForm.getGameCharacter()) {
-            if (goal.isFrogGetOn(frog.getLeft(), frog.getRight())) {
+            if (goal.isFrogGetOn(frog.left, frog.right)) {
                 // 점수 획득
                 // score + 1 시키고, SUCCESS로 게임 오버
                 Log.e("Game - isScore", "[SCORE] SUCCESS")
