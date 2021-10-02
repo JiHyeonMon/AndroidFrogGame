@@ -6,7 +6,7 @@ class Timber(l: Float, s: Int, d: Int): Character() {
 
     init {
         this.left = l
-        this.width = 341F
+        this.width = 400f
         this.speed = s
         this.direction = d
     }
@@ -20,8 +20,8 @@ class Timber(l: Float, s: Int, d: Int): Character() {
             }
         } else {
             // 역방향 (오 --> 왼) 인 경우
-            if (right < 0) {
-                left = right + 150
+            if (left+width < 0) {
+                left = 1080f
             }
         }
         // 통나무1, 2, 악어가 강의 속력과 방향에 맞춰 움직이게 한다.

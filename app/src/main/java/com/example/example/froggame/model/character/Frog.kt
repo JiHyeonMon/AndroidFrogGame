@@ -2,6 +2,10 @@ package com.example.example.froggame.model.character
 
 class Frog : Character() {
 
+    init {
+        width = 120f
+    }
+
     private var y: Float = 0f
 
     override fun move() {
@@ -13,8 +17,8 @@ class Frog : Character() {
             }
         } else {
             // 역방향 (오 --> 왼) 인 경우
-            if (right < 0) {
-                left = right + 150
+            if (left+width < 0) {
+                left = 1080f
             }
         }
         // 통나무1, 2, 악어가 강의 속력과 방향에 맞춰 움직이게 한다.
@@ -24,8 +28,6 @@ class Frog : Character() {
     fun setFrog() {
         // 개구리 처음 위치 지정
         left = 500F
-        width = 120f
-        right = left+width
 
         y = 1060f
     }

@@ -24,22 +24,8 @@ class Game {
     // < 게임 객체 생성 >
     // 게임에 필요한 Frog(), Land() 객체 생성
     val frog = Frog()
-//    val land = Land()
-//
-//    // 강의 방향에 따라 선언 차이 발생
-//    // River() 와 River(reverse: Boolean)으로 생성자를 두개 둬서 분리
-//    val river1 = River()
-//    val river2 = River(true)
-//    val river3 = River()
-//    val river4 = River(true)
 
     val landForm = arrayListOf(GoalPosition(), River(), River(true), Land(), River(), River(true))
-
-    // 개구리가 움직일 frogMove()에서 어떤 강인지 식별할 변수 - 강의 정보 가지고 있음.
-    // 개구리가 점프함에 따라 통나무나 악어에 올라타서 강과 함께 움직일지, 빠져죽을지 여부
-    // 제대로 올라탔을 때, 어떤 강인지 (흐를 수 있게) 명시
-    // 물에 빠지면 null 값
-    var frogFlowOnRiver: River? = null
 
     fun gameStart() {
         // 게임 시작
@@ -47,21 +33,12 @@ class Game {
         state = GAMESTATE.IN_PROGRESS
         jumpCnt = 6
 
-        // 개구리가 움직이는지 판단하는 값 - 강에 있는지 유무
-        // 맨 처음 개구리는 강에 있지 않다. null --> 움직이지 않는다.
-//        frogFlowOnRiver = null
-
         // 각각의 게임 객체 (개구리, 강(통나무/악어), 땅(뱀/점수판)) 초기화 및 생성
         frog.setFrog()
 
         for (landform in landForm) {
             landform.setLandForm()
         }
-//        river1.setRiver()
-//        river2.setRiver()
-//        river3.setRiver()
-//        river4.setRiver()
-//        land.setLand()
     }
 
     fun progress() {
@@ -76,16 +53,7 @@ class Game {
                 }
             }
         }
-//        river1.flow()
-//        river2.flow()
-//        river3.flow()
-//        river4.flow()
 
-        // 개구리가 강 위의 객체에 제대로 올라타서 움직이는가
-        // frogFlowOnRiver값이 있다면 제대로 올라탄 강이 있는거
-//        if (frogFlowOnRiver != null) {
-//            frogMove(frogFlowOnRiver)
-//        }
         frog.move()
 
     }
@@ -127,7 +95,7 @@ class Game {
             0 -> {
                 // 점수판 - 점수를 딸 수 있는지 여부 판단
                 frog.speed = 0
-                checkScore(landForm[0])
+                checkScore(landForm[0] as GoalPosition)
             }
         }
     }
@@ -140,7 +108,7 @@ class Game {
         // 반복문을 통해 하나하나 뱀들과 개구리와 위치를 확인한다.
         for (snake in land.getGameCharacter()) {
 
-            if (snake.isFrogGetOn(frog.left, frog.right)) {
+            if (snake.isFrogGetOn(frog.left, frog.left + frog.width)) {
                 Log.e("Game - isFrogMeetSnake", "[DEAD] Frog is eaten by Snake")
                 gameOver(GAMESTATE.SNAKE)
                 break
@@ -156,8 +124,11 @@ class Game {
         var isGetOn = false
 
         for (character in river.getGameCharacter()) {
-            Log.e("is Frog", "${frog.left} ${frog.right} ${character.left} ${character.left+character.width}")
-            if (character.isFrogGetOn(frog.left, frog.right)) {
+            Log.e(
+                "is Frog",
+                "${frog.left} ${frog.left+frog.width} ${character.left} ${character.left + character.width}"
+            )
+            if (character.isFrogGetOn(frog.left, frog.left + frog.width)) {
                 Log.e("geton", "getOn $character ${river.getSpeed()} ${river.getDirection()}")
                 // 올라탐
                 frog.speed = river.getSpeed()
@@ -174,98 +145,34 @@ class Game {
             frog.direction = river.getDirection()
             gameOver(GAMESTATE.DROWN)
         }
-
-
-
-//        // 악어에 올라탔는지 판단 - 완전히 겹치는지 판단
-//        if (river.crocodile.isFrogGetOn(frog.getLeft(), frog.getRight())) {
-//            // 악어에 제대로 올라탔다.
-//            if (river.crocodile.isCrocodileHead(frog.getLeft(), frog.getRight())) {
-//                // 악어 머리냐
-//                gameOver(GAMESTATE.CROCODILE)
-//            } else {
-//            }
-//            // 통나무1에 올라탔는지 판단
-//        } else if (river.timber1.isFrogGetOn(frog.getLeft(), frog.getRight())) {
-//            // 올라탔다. 강의 속력과 방향대로 움직인다.
-//            Log.e("Game - isFrogGetIn", "Frog get on the Timber")
-//            frogFlowOnRiver = river
-//            frogMove(river)
-//
-//            // 통나무2에 올라탔는지 판단
-//        } else if (river.timber2.isFrogGetOn(frog.getLeft(), frog.getRight())) {
-//            // 올라탔다. 강의 속력과 방향대로 움직인다.
-//            Log.e("Game - isFrogGetIn", "Frog get on the Timber")
-//            frogFlowOnRiver = river
-//            frogMove(river)
-//
-//        } else {
-//            // 못올라탐 - 죽음
-//            // 물에 빠지고 게임오버
-//            Log.e("Game - isFrogGetIn", "[DEAD] Frog is drown")
-//            gameOver(GAMESTATE.DROWN)
-//        }
     }
 
-//    fun frogMove(river: River?) {
-//        // 개구리 첫 시작과 뱀이 있는 땅 부분에서는 개구리가 움직이지 않는다.
-//        // 강에 있지 않기에 null 값이 들어온다.
-//        // null 이 아닐 경우! 개구리 움직인다.
-//        if (river != null) {
-//            // 개구리가 강의 통나무나 악어에 제대로 올라타서 움직인다.
-//            // 개구리를 강의 속도에 맞춰 움직인다.
-//            // 개구리가 오른쪽 벽에 닿임 - 죽음 - 게임오버
-//            if (frog.getRight() > 1080) {
-//                Log.e("Game - frogMove", "[DEAD] Frog bump into Right Wall")
-//                gameOver(GAMESTATE.WALL)
-//                return
-//            }
-//            // 개구리가 왼쪽 벽에 닿임 - 죽음 - 게임오버
-//            if (frog.getLeft() < 0) {
-//                Log.e("Game - frogMove", "[DEAD] Frog bump into left Wall")
-//                gameOver(GAMESTATE.WALL)
-//                return
-//            }
-//            // 강의 속력과 방향에 맞춰 이동한다.
-//            frog.setLeft(frog.getLeft() + river.getSpeed() * river.getDirection())
-//        }
-//    }
-
-    private fun checkScore(landForm: LandForm) {
+    private fun checkScore(goalPosition: GoalPosition) {
         // 개구리가 마지막 단계까지 가서 점프를 했을 때 점수를 얻었는지 확인
         // 점수판이 있는 좌표를 알기위해 land.getBoard() 메서드를 호출해 ScoreBoard 객체들을 배열로 받는다.
 
-        for (goal in landForm.getGameCharacter()) {
-            if (goal.isFrogGetOn(frog.left, frog.right)) {
+        var isScore = false
+
+        for (goal in goalPosition.getGameCharacter()) {
+            Log.e("check Score", "${frog.left} ${frog.left+frog.width} ${goal.left} ${goal.left+goal.width}")
+            if (goal.isFrogGetOn(frog.left, frog.left + frog.width)) {
                 // 점수 획득
                 // score + 1 시키고, SUCCESS로 게임 오버
                 Log.e("Game - isScore", "[SCORE] SUCCESS")
                 score += 1
+                isScore = true
                 gameOver(GAMESTATE.SCORE)
                 break
             }
         }
 
-        // 점수판에 못오르고 물에 빠짐 - 게임 오버
-        Log.e("Game - isScore", "[DEAD] Frog is drown")
-        gameOver(GAMESTATE.DROWN)
+        if (!isScore) {
 
-//        // 총 세개의 점수판이 있다. - 완전히 겹쳐야만 점수 인정
-//        // 각 보드판에 개구리가 들어가는지 확인
-//        if ((boards[0].getLeft() < frog.getLeft() && frog.getRight() < boards[0].getRight()) ||
-//            (boards[1].getLeft() < frog.getLeft() && frog.getRight() < boards[1].getRight()) ||
-//            (boards[2].getLeft() < frog.getLeft() && frog.getRight() < boards[2].getRight())
-//        ) {
-//            // 점수 획득
-//            // score + 1 시키고, SUCCESS로 게임 오버
-//            Log.e("Game - isScore", "[SCORE] SUCCESS")
-//            score += 1
-//            gameOver(GAMESTATE.SCORE)
-//        } else {
-//            // 점수판에 못오르고 물에 빠짐 - 게임 오버
-//            Log.e("Game - isScore", "[DEAD] Frog is drown")
-//            gameOver(GAMESTATE.DROWN)
-//        }
+            // 점수판에 못오르고 물에 빠짐 - 게임 오버
+            Log.e("Game - isScore", "[DEAD] Frog is drown")
+            gameOver(GAMESTATE.DROWN)
+        }
+
     }
 
     private fun gameOver(state: GAMESTATE) {

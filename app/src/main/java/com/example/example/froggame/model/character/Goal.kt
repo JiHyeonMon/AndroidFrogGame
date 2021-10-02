@@ -1,11 +1,10 @@
 package com.example.example.froggame.model.character
 
 import android.util.Log
-import com.example.example.froggame.model.Game
 
-class Goal: Character() {
+class Goal : Character() {
 
-//    val width = 180
+    //    val width = 180
     init {
         width = 180f
     }
@@ -28,7 +27,7 @@ class Goal: Character() {
 //            gameOver(Game.GAMESTATE.DROWN)
 //        }
 
-        if (left<lFrog && rFrog<right) {
+        if (left < lFrog && rFrog < left + width) {
             // 점수 획득
             // score + 1 시키고, SUCCESS로 게임 오버
             Log.e("Game - isScore", "[SCORE] SUCCESS")

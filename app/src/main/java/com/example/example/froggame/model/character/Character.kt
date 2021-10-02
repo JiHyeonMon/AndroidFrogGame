@@ -6,7 +6,6 @@ abstract class Character {
     open var width: Float = 0.0f
     open var right: Float = left+width
 
-
     open var speed: Int = 0
     open var direction: Int = 1
 

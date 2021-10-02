@@ -6,7 +6,7 @@ class Crocodile(l: Float, s: Int, d: Int): Character() {
 
     init {
         this.left = l
-        width = 446f
+        width = 400f
         speed = s
         direction = d
     }
@@ -27,7 +27,7 @@ class Crocodile(l: Float, s: Int, d: Int): Character() {
             }
         } else {
             // 역방향 (오 --> 왼) 인 경우
-            if (right < 0) {
+            if (left+width < 0) {
                 left = 1080f
             }
         }
