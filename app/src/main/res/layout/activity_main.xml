@@ -8,28 +8,29 @@
     android:id="@+id/layout">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout1"
+        android:id="@+id/goalLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/blue"
         android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/riverLayout1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/layout2">
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout2"
+        android:id="@+id/riverLayout1"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/skyblue"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout1"
-        app:layout_constraintBottom_toTopOf="@id/layout3">
+        app:layout_constraintTop_toBottomOf="@id/goalLayout"
+        app:layout_constraintBottom_toTopOf="@id/riverLayout2">
 
         <ImageView
             android:id="@+id/timber1InLayout2"
@@ -58,15 +59,15 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout3"
+        android:id="@+id/riverLayout2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:background="@color/blue"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout2"
-        app:layout_constraintBottom_toTopOf="@id/layout4">
+        app:layout_constraintTop_toBottomOf="@id/riverLayout1"
+        app:layout_constraintBottom_toTopOf="@id/landLayout">
 
         <ImageView
             android:id="@+id/timber1InLayout3"
@@ -82,6 +83,7 @@
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
+            android:rotationY="180f"
             android:src="@drawable/crokerdail"/>
 
         <ImageView
@@ -95,26 +97,26 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout4"
+        android:id="@+id/landLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/lightbrown"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout3"
-        app:layout_constraintBottom_toTopOf="@id/layout5">
+        app:layout_constraintTop_toBottomOf="@id/riverLayout2"
+        app:layout_constraintBottom_toTopOf="@id/riverLayout3">
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout5"
+        android:id="@+id/riverLayout3"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/blue"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout4"
-        app:layout_constraintBottom_toTopOf="@id/layout6">
+        app:layout_constraintTop_toBottomOf="@id/landLayout"
+        app:layout_constraintBottom_toTopOf="@id/riverLayout4">
 
         <ImageView
             android:id="@+id/timber1InLayout5"
@@ -143,14 +145,14 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout6"
+        android:id="@+id/riverLayout4"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:background="@color/skyblue"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout5"
+        app:layout_constraintTop_toBottomOf="@id/riverLayout3"
         app:layout_constraintBottom_toTopOf="@id/layout7">
 
         <ImageView
@@ -167,6 +169,7 @@
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
+            android:rotationY="180f"
             android:src="@drawable/crokerdail"/>
 
         <ImageView
@@ -186,7 +189,7 @@
         android:background="@color/lightbrown"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout6"
+        app:layout_constraintTop_toBottomOf="@id/riverLayout4"
         app:layout_constraintBottom_toTopOf="@id/layout8"
         android:orientation="horizontal">
 

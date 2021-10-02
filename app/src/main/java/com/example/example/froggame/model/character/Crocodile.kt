@@ -1,10 +1,10 @@
-package com.example.example.froggame.model
+package com.example.example.froggame.model.character
 
 import android.util.Log
+import com.example.example.froggame.model.character.Character
 
-class Crocodile {
+class Crocodile: Character {
 
-    private var left: Float = 0f
     var width = 446
     var reverse = false
 
@@ -15,9 +15,13 @@ class Crocodile {
         this.reverse = reverse
     }
 
-    fun isFrogGetOn(lFrog: Float, rFrog: Float): Boolean {
+    override fun setRight(w: Float) {
+        super.setRight(446F)
+    }
+
+    override fun isFrogGetOn(lFrog: Float, rFrog: Float): Boolean {
         // 악어에 올라탔는지 판단 - 완전히 겹치는지 판단
-        if (left <= lFrog && rFrog <= left + width) {
+        if (getLeft() <= lFrog && rFrog <= getRight()) {
             return true
         }
         return false
@@ -32,7 +36,7 @@ class Crocodile {
             // 악어의 머리가 왼쪽
             // 일단 개구리가 올라탔다. 왼쪽의 머리와 겹치는지만 판단
             // 개구리의 왼좌표가 악어 머리 끝나는 지점보다 왼쪽이면 겹침.
-            return if (lFrog < left + width * 1 / 4) {
+            return if (lFrog < getLeft() + width * 1 / 4) {
                 // 개구리 악어에게 먹힘
                 Log.e(
                     "Game - isFrogGetIn",
@@ -43,7 +47,7 @@ class Crocodile {
         } else {
             // 악어 머리가 오른쪽
             // 일단 개구리 올라탔다. 개구리의 오른쪽이 머리 시작점오다 오른쪽인지 판단
-            return if (left + width * 3 / 4 < rFrog) {
+            return if (getLeft() + width * 3 / 4 < rFrog) {
                 Log.e(
                     "Game - isFrogGetIn",
                     "[DEAD] Frog is eaten by crocodile - The Crocodile's head direction is right (default)"
@@ -51,17 +55,5 @@ class Crocodile {
                 true
             } else false
         }
-    }
-
-    fun getLeft(): Float {
-        return left
-    }
-
-    fun getRight(): Float {
-        return getLeft() + width
-    }
-
-    fun setLeft(l: Float) {
-        this.left = l
     }
 }
