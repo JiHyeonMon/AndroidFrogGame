@@ -7,11 +7,15 @@ import com.example.example.froggame.model.landform.GoalPosition
 import com.example.example.froggame.model.landform.Land
 import com.example.example.froggame.model.landform.River
 
-class Game {
+class Game(width: Int, height: Int) {
     // 게임상태를 나타내는 상수
     // 게임 중인지, 점수를 취득했는지, 개구리가 죽었는지 여부 판단이 필요 ( + 어떻게 죽었는지)
     // 해당 여부를 GAMESTATE 상수로 판단
     enum class GAMESTATE { IN_PROGRESS, SCORE, SNAKE, CROCODILE, WALL, DROWN, FINISHED }
+
+
+    val gameWidth = width
+    val gameHeight = height
 
     // 현재 게임의 상태를 나타낼 state 변수
     var state: GAMESTATE = GAMESTATE.IN_PROGRESS
@@ -35,10 +39,10 @@ class Game {
         jumpCnt = 6
 
         // 각각의 게임 객체 (개구리, 강(통나무/악어), 땅(뱀/점수판)) 초기화 및 생성
-        frog.setFrog()
+        frog.setFrog(gameWidth, gameHeight)
 
         for (landform in landForm) {
-            landform.setLandForm()
+            landform.setLandForm(gameWidth, gameHeight)
         }
     }
 
@@ -64,10 +68,10 @@ class Game {
 
     }
 
-    fun frogJump(h: Int) {
+    fun frogJump() {
         // 개구리 점프가 발생했을 때,
         // 개구리의 Y 좌표 값 h만큼 변경
-        frog.jump(h)
+        frog.jump(gameHeight*0.1)
 
         jumpCnt -= 1
         // 점프 카운트 1, 각 단계에 맞는 로직 처리

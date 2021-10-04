@@ -1,5 +1,6 @@
 package com.example.example.froggame.controller
 
+import android.graphics.Point
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -17,9 +18,11 @@ import com.example.example.froggame.model.landform.GoalPosition
 import com.example.example.froggame.model.landform.Land
 import com.example.example.froggame.model.landform.River
 
+
 class MainActivity : AppCompatActivity() {
 
     private var height = 0
+    private var width = 0
 
     lateinit var gameModel: Game
     lateinit var frogImage: ImageView
@@ -48,7 +51,15 @@ class MainActivity : AppCompatActivity() {
             binding.riverLayout4
         )
 
-        gameModel = Game()
+        val display = windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        width = size.x
+        height = size.y
+
+        Toast.makeText(this, "$height $width", Toast.LENGTH_SHORT).show()
+
+        gameModel = Game(width, height)
         gameModel.gameStart()
 
         initialUI()
@@ -58,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnJump.setOnClickListener {
             // 개구리가 움직임
             // Controller --> Model
-            gameModel.frogJump(height)
+            gameModel.frogJump()
 
         }
 
@@ -68,8 +79,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun initialUI() {
         setFrogUI()
-//        setSnakeUI()
-//        setScoreBoardUI()
         setLandFormUI()
     }
 
@@ -97,6 +106,7 @@ class MainActivity : AppCompatActivity() {
         // Model의 점수, step 값이 변경되면 View 에서 반영한다.
         binding.textScore.text = gameModel.score.toString()
         binding.textLives.text = gameModel.step.toString()
+
     }
 
     private fun setFrogUI() {
@@ -179,6 +189,12 @@ class MainActivity : AppCompatActivity() {
         // 개구리가 점프를 할 높이를 layout의 높이만큼으로 설정
         // 화면에 focus 얻을 때 높이를 구하여 높이를 저장
         height = binding.goalLayout.measuredHeight
+        width = binding.goalLayout.measuredWidth
+
+        if (hasFocus) {
+            gameModel.frog.setFrog(width/2-width/2, height*6+100)
+        }
+
     }
 
     private fun checkUpdate() {

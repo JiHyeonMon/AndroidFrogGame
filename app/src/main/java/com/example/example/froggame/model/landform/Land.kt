@@ -10,7 +10,7 @@ class Land : LandForm() {
 
     // 게임이 재시작될 때마다 호출
     // 새로 뱀 생성위해 생성될 뱀 숫자 랜덤하게 뽑고, 해당 개수만큼 Snake객체 생성해서 배열에 넣는다.
-    override fun setLandForm() {
+    override fun setLandForm(w: Int, h: Int) {
         num = (1..3).random()
         for (i in 1..num) {
             this.snakes.add(Snake())

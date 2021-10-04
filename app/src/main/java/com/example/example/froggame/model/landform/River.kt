@@ -46,9 +46,8 @@ class River : LandForm {
 
     }
 
-    override fun setLandForm() {
+    override fun setLandForm(w: Int, h: Int) {
         // 강의 속력을 랜덤으로 설정하고 강 흐르기 시작!
-        super.setLandForm()
         this.speed = (2..7).random()
 
         for (chracter in gameCharacter) {
@@ -67,41 +66,6 @@ class River : LandForm {
         this.speed = 0
         this.direction = 0
     }
-
-//    override fun flow() {
-//        // 흐르기 시작
-//        if (direction > 0) {
-//            // 순방향 (왼 --> 오) 인 경우
-//            // 통나무1, 2, 악어가 오른쪽 벽을 지나 완전히 지나갔다면 해당 위치를 왼쪽으로 이동시켜 계속해서 움직일 수 있게 한다.
-//            if (timber1.getLeft() > 1080) {
-//                timber1.setLeft(0F - timber1.width - 150)
-//            }
-//            if (timber2.getLeft() > 1080) {
-//                timber2.setLeft(crocodile.getLeft() - timber2.width - 150)
-//            }
-//            if (crocodile.getLeft() > 1080) {
-//                crocodile.setLeft(timber1.getLeft() - crocodile.width - 150)
-//            }
-//
-//        } else {
-//            // 역방향 (오 --> 왼) 인 경우
-//            // 통나무1, 2, 악어가 왼쪽 벽을 지나 완전히 지나갔다면 해당 위치를 오른쪽으로 이동시켜 계속해서 움직일 수 있게 한다.
-//            if (timber1.getRight() < 0) {
-//                timber1.setLeft(1080f + 150)
-//            }
-//            if (timber2.getRight() < 0) {
-//                timber2.setLeft(crocodile.getRight() + 150)
-//            }
-//            if (crocodile.getRight() < 0) {
-//                crocodile.setLeft(timber1.getRight() + 150)
-//            }
-//        }
-//        // 통나무1, 2, 악어가 강의 속력과 방향에 맞춰 움직이게 한다.
-//        timber1.setLeft(timber1.getLeft() + speed * direction)
-//        timber2.setLeft(timber2.getLeft() + speed * direction)
-//        crocodile.setLeft(crocodile.getLeft() + speed * direction)
-//
-//    }
 
     // 개구리가 강에 올라탔을 때 해당 속력과 속도로 움직이기 위해 getSpeed(), getDirection() 메서드 제공
     fun getSpeed(): Int {

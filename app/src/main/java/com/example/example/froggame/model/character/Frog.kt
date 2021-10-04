@@ -25,17 +25,18 @@ class Frog : Character() {
         left += speed * direction
     }
 
-    fun setFrog() {
-        // 개구리 처음 위치 지정
-        left = 500F
+    fun setFrog(w: Int, h: Int) {
 
-        y = 1060f
+        // 개구리 처음 위치 지정
+        left = (w/2-width/2)
+        y = (h*6/10).toFloat()
+
     }
 
-    fun jump(h: Int) {
+    fun jump(h: Double) {
         // 개구리가 점프할 경우
         // 개구리의 y값을 바꿔준다.
-        this.y -= h
+        this.y -= h.toFloat()
     }
 
     fun getY(): Float {
