@@ -259,6 +259,8 @@ class MainActivity : AppCompatActivity() {
         // 게임 재시작
         gameModel.gameStart()
         initialUI()
+        refreshUI ()
+
     }
 
     private fun gameFinish() {

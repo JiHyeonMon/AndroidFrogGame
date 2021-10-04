@@ -1,6 +1,7 @@
 package com.example.example.froggame.model
 
 import android.util.Log
+import com.example.example.froggame.model.character.Crocodile
 import com.example.example.froggame.model.character.Frog
 import com.example.example.froggame.model.landform.GoalPosition
 import com.example.example.froggame.model.landform.Land
@@ -124,17 +125,23 @@ class Game {
         var isGetOn = false
 
         for (character in river.getGameCharacter()) {
-            Log.e(
-                "is Frog",
-                "${frog.left} ${frog.left+frog.width} ${character.left} ${character.left + character.width}"
-            )
+
             if (character.isFrogGetOn(frog.left, frog.left + frog.width)) {
+                isGetOn = true
+
+                if (character is Crocodile) {
+
+                    if (character.isCrocodileHead(frog.left, frog.left + frog.width)) {
+                        Log.e("Game - isFrogGetOn", "[DEAD] Frog is eaten by Crocodile")
+                        gameOver(GAMESTATE.SNAKE)
+                        break
+                    }
+                }
                 Log.e("geton", "getOn $character ${river.getSpeed()} ${river.getDirection()}")
                 // 올라탐
                 frog.speed = river.getSpeed()
                 frog.direction = river.getDirection()
                 frog.move()
-                isGetOn = true
                 break
             }
         }
