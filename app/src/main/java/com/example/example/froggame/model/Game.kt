@@ -29,6 +29,7 @@ class Game {
     val landForm = arrayListOf(GoalPosition(), River(), River(true), Land(), River(), River(true))
 
     fun gameStart() {
+        Log.e("게임 시작", "start")
         // 게임 시작
         // 게임 시작 상태인 GAMESTATE.IN_PROGRESS 설정
         state = GAMESTATE.IN_PROGRESS
@@ -194,11 +195,6 @@ class Game {
         // finish 호출해 게임을 완전히 끝낸다.
         if (step == 0) {
             finish()
-        }
-
-        // 모든 객체 초기화
-        for (landform in landForm) {
-            landform.clearLandForm()
         }
     }
 

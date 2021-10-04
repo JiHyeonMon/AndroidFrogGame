@@ -84,31 +84,15 @@ class MainActivity : AppCompatActivity() {
         // 아래 통나무와 악어들도 계속 움직인다.
         // 움직임을 지속적으로 관찰해 화면에 반영한다.
         // timber
-
-
         for (i in 0 until gameModel.landForm.size) {
             if (gameModel.landForm[i] is River) {
+
                 layouts[i][0].x = gameModel.landForm[i].getGameCharacter()[0].left
                 layouts[i][1].x = gameModel.landForm[i].getGameCharacter()[1].left
                 layouts[i][2].x = gameModel.landForm[i].getGameCharacter()[2].left
+
             }
         }
-
-//        binding.timber1InLayout2.x = gameModel.landForm[].timber1.getLeft()
-//        binding.timber2InLayout2.x = gameModel.river1.timber2.getLeft()
-//        binding.timber1InLayout3.x = gameModel.river2.timber1.getLeft()
-//        binding.timber2InLayout3.x = gameModel.river2.timber2.getLeft()
-//        binding.timber1InLayout5.x = gameModel.river3.timber1.getLeft()
-//        binding.timber2InLayout5.x = gameModel.river3.timber2.getLeft()
-//        binding.timber1InLayout6.x = gameModel.river4.timber1.getLeft()
-//        binding.timber2InLayout6.x = gameModel.river4.timber2.getLeft()
-//
-//        // crocodile
-//        binding.crocodileInLayout2.x = gameModel.river1.crocodile.getLeft()
-//        binding.crocodileInLayout3.x = gameModel.river2.crocodile.getLeft()
-//        binding.crocodileInLayout5.x = gameModel.river3.crocodile.getLeft()
-//        binding.crocodileInLayout6.x = gameModel.river4.crocodile.getLeft()
-
 
         // Model의 점수, step 값이 변경되면 View 에서 반영한다.
         binding.textScore.text = gameModel.score.toString()
@@ -133,7 +117,7 @@ class MainActivity : AppCompatActivity() {
     private fun setLandFormUI() {
 
 
-        for (i in 0 until gameModel.landForm.size) {
+        for (i in 0 until layouts.size) {
             // arrayListOf(GoalPosition(), River(), River(true), Land(), River(), River(true))
 
             if (gameModel.landForm[i] is GoalPosition) {
@@ -215,7 +199,7 @@ class MainActivity : AppCompatActivity() {
                     gameOver()
                 }
 
-                handler.postDelayed(this, 15)
+                handler.postDelayed(this, 10)
             }
         }
         handler.post(runnable)
@@ -259,7 +243,7 @@ class MainActivity : AppCompatActivity() {
         // 게임 재시작
         gameModel.gameStart()
         initialUI()
-        refreshUI ()
+        refreshUI()
 
     }
 

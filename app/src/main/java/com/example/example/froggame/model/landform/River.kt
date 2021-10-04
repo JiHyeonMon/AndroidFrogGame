@@ -19,7 +19,7 @@ class River : LandForm {
 //    var timber2: Timber
 //    var crocodile: Crocodile
 
-    //     강을 만들 때 기본적으로 통나무 2개, 악어 한마리 생성됨.
+//     강을 만들 때 기본적으로 통나무 2개, 악어 한마리 생성됨.
 //     이때 좌표값을 처음에 겹치지 않게 설정위해서 초기 값을 지정해준다.
 //     각 객체와 겹치지 않게 떨어뜨리린다.
     constructor() {
