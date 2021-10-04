@@ -5,7 +5,6 @@ import com.example.example.froggame.model.character.Crocodile
 import com.example.example.froggame.model.character.Frog
 import com.example.example.froggame.model.landform.GoalPosition
 import com.example.example.froggame.model.landform.Land
-import com.example.example.froggame.model.landform.LandForm
 import com.example.example.froggame.model.landform.River
 
 class Game {
@@ -57,6 +56,11 @@ class Game {
         }
 
         frog.move()
+        if (frog.left+frog.width > 1080 || frog.left<0) {
+            frog.speed = 0
+            Log.e("Game - progress", "[DEAD] Frog bump into Wall")
+            gameOver(GAMESTATE.WALL)
+        }
 
     }
 
