@@ -128,7 +128,7 @@ class Game(width: Int, height: Int) {
 
         for (snake in land.getGameCharacter()) {
             // 반복문을 통해 하나하나 뱀들과 개구리와 위치를 확인한다.
-            if (snake.isFrogGetOn(frog.left, frog.left + frog.width)) {
+            if (snake.isOverlap(frog.left, frog.left + frog.width)) {
                 // 뱀에 닿이면 뱀에게 먹혀 gameOver
                 Log.e("Game - isFrogMeetSnake", "[DEAD] Frog is eaten by Snake")
                 gameOver(GAMESTATE.SNAKE)
@@ -144,7 +144,7 @@ class Game(width: Int, height: Int) {
         for (character in river.getGameCharacter()) {
             // 해당 강에 있는 캐릭터들을 반복문을 통해 모두 확인한다.
 
-            if (character.isFrogGetOn(frog.left, frog.left + frog.width)) {
+            if (character.isOverlap(frog.left, frog.left + frog.width)) {
                 if (character is Crocodile) {
                     // 악어에 올라탔을 경우, 악어의 머리에 위치했냐에 따라 계속 진행 될 수도, 개구리가 죽고 게임 새로 시작될 수도 있다.
                     if (character.isCrocodileHead(frog.left, frog.left + frog.width)) {
@@ -159,7 +159,8 @@ class Game(width: Int, height: Int) {
                 // 개구리의 속력과 방향을 강의 속력과 방향과 맞추고 함께 움직인다.
                 frog.speed = river.getSpeed()
                 frog.direction = river.getDirection()
-                frog.move()
+
+//                frog.move()
 
                 // 하나라도 올라탔을 경우 return을 통해 해당 함수 종료시킨다.
                 return
@@ -177,7 +178,7 @@ class Game(width: Int, height: Int) {
         // 점수판이 있는 좌표를 알기위해 destination.getGameCharacter() 메서드를 호출해 목적지에 위치한 Goal 객체들을 배열로 받는다.
 
         for (goal in destination.getGameCharacter()) {
-            if (goal.isFrogGetOn(frog.left, frog.left + frog.width)) {
+            if (goal.isOverlap(frog.left, frog.left + frog.width)) {
                 // 완전히 올라가 점수 획득
                 // score + 1 시키고, SUCCESS로 게임 오버
                 Log.e("Game - isScore", "[SCORE] SUCCESS")

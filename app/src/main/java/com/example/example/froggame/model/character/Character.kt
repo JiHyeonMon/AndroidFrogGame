@@ -18,7 +18,7 @@ abstract class Character {
 
     // 개구리를 제외한 게임 캐릭터는 개구리가 올라탔는지 확인하는 절차가 필요하다.
     // 해당 절차를 아래의 메서드에서 구현 (개구리의 위치를 받아 올라탔는지 판별)
-    open fun isFrogGetOn(lFrog: Float, rFrog: Float): Boolean {
+    open fun isOverlap(lFrog: Float, rFrog: Float): Boolean {
 
         // 완전히 개구리와 겹치는지 확인한다.
         if (left <= lFrog && rFrog <= left+width) {
