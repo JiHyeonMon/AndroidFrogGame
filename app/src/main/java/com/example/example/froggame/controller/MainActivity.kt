@@ -1,121 +1,103 @@
 package com.example.example.froggame.controller
 
+import android.graphics.Point
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.get
 import com.example.example.froggame.R
+import com.example.example.froggame.databinding.ActivityMainBinding
 import com.example.example.froggame.model.Game
+import com.example.example.froggame.model.character.Timber
+import com.example.example.froggame.model.landform.Destination
+import com.example.example.froggame.model.landform.Land
+import com.example.example.froggame.model.landform.River
+
 
 class MainActivity : AppCompatActivity() {
 
-    private var height = 0
-    var jumpCnt = 6
+    // 기기마다 화면 크기가 다르기때문에 개구리의 초기 위치, 점프 높이가 다 다르다.
+    // 앱이 시작되면 기기 화면의 크기를 구하고 Model에 넘겨 character들 설정에 사용한다.
+    private var screenWidth = 0
+    private var screenHeight = 0
 
+    // 실제 게임과 관련된 데이터를 가지고 있는 모델 선언
     lateinit var gameModel: Game
 
-    lateinit var score: TextView
-    lateinit var lives: TextView
-    lateinit var btnJump: Button
-
-    lateinit var layout1: ConstraintLayout
-    lateinit var layout2: ConstraintLayout
-    lateinit var layout3: ConstraintLayout
-    lateinit var layout4: ConstraintLayout
-    lateinit var layout5: ConstraintLayout
-    lateinit var layout6: ConstraintLayout
-    lateinit var layout7: ConstraintLayout
-    lateinit var layout: ConstraintLayout
-
-    lateinit var timber1InLayout2: ImageView
-    lateinit var timber2InLayout2: ImageView
-    lateinit var crocodileInLayout2: ImageView
-    lateinit var timber1InLayout3: ImageView
-    lateinit var timber2InLayout3: ImageView
-    lateinit var crocodileInLayout3: ImageView
-    lateinit var timber1InLayout5: ImageView
-    lateinit var timber2InLayout5: ImageView
-    lateinit var crocodileInLayout5: ImageView
-    lateinit var timber1InLayout6: ImageView
-    lateinit var timber2InLayout6: ImageView
-    lateinit var crocodileInLayout6: ImageView
-
-    lateinit var frogImage: ImageView
-
+    // Model을 지속적으로 관찰하고 View를 업데이트 시키기 위한 runnable객체와 Handler
     lateinit var handler: Handler
     lateinit var runnable: Runnable
 
+    // View 객체를 참조하기 위해 ViewBinding 사용
+    // binding 객체 선언
+    private lateinit var binding: ActivityMainBinding
+
+    // View에서 사용
+    lateinit var frogImage: ImageView
+    lateinit var layouts: ArrayList<ViewGroup>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        // Reference View
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // View 초기화 - 앞서 lateinit으로 선언한 View들 init 해줌
-        // 화면에 그려질 View 객체들 Id 참조
-        initial()
+        // 기기의 화면 크기를 windowManager를 통해 받아온다.
+        // screenHeight와 screenWidth 값을 초기화한다.
+        val display = windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        screenHeight = size.x
+        screenWidth = size.y
 
-        // GameModel 객체 생성
-        // gameStart()를 통해 게임을 시작
-        gameModel = Game()
+        // 화면상에 게임 캐릭터들을 동적으로 추가하기 위해 캐릭터들이 들어갈 layout을 배열로 선언
+        layouts = arrayListOf(
+            binding.goalLayout,
+            binding.riverLayout1,
+            binding.riverLayout2,
+            binding.landLayout,
+            binding.riverLayout3,
+            binding.riverLayout4
+        )
+
+
+        // 게임 생성
+        gameModel = Game(screenHeight, screenWidth)
+
+        // 게임 시작
         gameModel.gameStart()
 
-        // Model에서 가져온 데이터들 화면에 보여주기 위한 코드
-        // Model --> Controller --> View
-        setFrogUI()
-        setSnakeUI()
-        setScoreBoardUI()
-        setCrocodile()
+        // Model에서 게임이 시작되고 게임 캐릭터들이 생성된다.
+        // initialUI()에서 Model에 생성된 캐릭터들을 확인하고 View에 추가한다.
+        initialUI()
 
-        // run loop
-        // Handler를 통해 Controller에서 지속적으로 Action발생시 Model의 데이터 변화시키고, 변화를 관찰하고 값이 변경되면 View도 변경시킨다.
-        // View --> Controller --> Model
-        // Model --> Controller --> View
+        // 사용자가 화면의 '점프'버튼을 클릭시 개구리가 점프를 한다.
+        // View에서 이벤트 발생시 Controller에서 Model에 알려 적절히 데이터 처리를 한다.
+        binding.btnJump.setOnClickListener {
+            // 개구리가 점프해야 한다.
+            // Controller --> Model
+            gameModel.frogJump()
+        }
+
+        // Model 값을 지속적으로 받아와 View에 업데이트 한다.
         checkUpdate()
 
+    }
 
-        // 사용자가 화면에서 jump 버튼을 누르면 Controller가 Model에 점프 알리고 Model은 값을 변경시킨다.
-        // View --> Controller --> Model
-        btnJump.setOnClickListener {
-            // 개구리가 움직임
-            // Controller --> Model
-            gameModel.frogJump(height)
-
-            jumpCnt -= 1
-            // 점프 카운트 1, 각 단계에 맞는 로직 처리
-            when (jumpCnt) {
-                5 -> {
-                    // 강 - 개구리가 올라탔는지 확인
-                    gameModel.isFrogGetOn(gameModel.river4)
-                }
-                4 -> {
-                    // 강 - 개구리가 올라탔는지 확인
-                    gameModel.isFrogGetOn(gameModel.river3)
-                }
-                3 -> {
-                    // 땅 - 뱀과 만났는지 확인
-                    gameModel.frogFlowOnRiver = null
-                    gameModel.checkFrogMeetSnake()
-                }
-                2 -> {
-                    // 강 - 개구리가 올라탔는지 확인
-                    gameModel.isFrogGetOn(gameModel.river2)
-                }
-                1 -> {
-                    // 강 - 개구리가 올라탔는지 확인
-                    gameModel.isFrogGetOn(gameModel.river1)
-                }
-                0 -> {
-                    // 점수판 - 점수를 딸 수 있는지 여부 판단
-                    gameModel.checkScore()
-                }
-            }
-        }
+    private fun initialUI() {
+        // 게임이 시작되면 Model에서 데이터를 받아와 화면상의 캐릭터들을 그려준다.
+        setFrogUI()
+        setGameCharacterUI()
     }
 
     private fun setFrogUI() {
         // 화면에 Frog 그리는 부분
+
         // Frog를 그릴 ViewGroup
         val gameLayout = findViewById<View>(R.id.layout) as ConstraintLayout
 
@@ -127,158 +109,143 @@ class MainActivity : AppCompatActivity() {
 
         // ViewGroup에 만든 개구리 ImageView를 addView 시켜준다.
         gameLayout.addView(frogImage)
+    }
 
-        // 이제 화면에 개구리가 그려진다.
-        // Model에서 개구리 위치를 받아와서 해당 위치로 개구리를 위치시킨다.
+    private fun setGameCharacterUI() {
+        // 개구리를 제외한 게임 캐릭터들을 그리는 부분
+        // 점수판, 통나무, 악어, 뱀을 각각 알맞은 지형에 그려준다.
+
+        for (i in 0 until layouts.size) {
+            // View에서의 layouts와 Model에서 landForm을 미리 같은 순서로 세팅해서 같은 i 인덱스에 같은 지형이 나오도록 초기 설정
+            // 그래서 layouts의 크기만큼을 반복문을 돌며, Model에서의 landform이 뭔지를 확인하고 View에서의 layout에 적절한 이미지를 추가한다.
+
+            when (gameModel.landForm[i]){
+                is Destination -> {
+                    // 목적지 Layout - Goal Position 그리기
+
+                    // Model에서 배열로 Goal 데이터를 받아온다.
+                    val goals = gameModel.landForm[i].getGameCharacter()
+
+                    // 받은 goals만큼 반복문을 돌며 화면에 그려준다.
+                    // ImageView를 생성하여 점수판 그림을 넣고 Model에서 위치 값을 가져와서 해당 위치로 위치시킨다.
+                    // Viewgroup에 addView함으로써 실제로 화면상에 보이게 된다.
+                    for (goal in goals) {
+                        val panel = ImageView(this)
+                        panel.setBackgroundResource(R.drawable.circle)
+                        panel.x = goal.left
+
+                        layouts[i].addView(panel, 180, 180)
+                    }
+                }
+                is Land -> {
+                    // 육지 Layout - 뱀 그리기
+
+                    // Model에서 배열로 뱀 데이터를 받아온다.
+                    val snakes = gameModel.landForm[i].getGameCharacter()
+
+                    // 받은 snakes만큼 반복문을 돌며 화면에 그려준다.
+                    // ImageView를 생성하여 뱀 그림을 넣고 Model에서 위치 값을 가져와서 해당 위치로 위치시킨다.
+                    // Viewgroup에 addView함으로써 실제로 화면상에 보이게 된다.
+                    for (item in snakes) {
+                        Log.e("snake", "${item.width}")
+                        val snake = ImageView(this)
+                        snake.setBackgroundResource(R.drawable.snake)
+                        snake.x = item.left
+
+                        layouts[i].addView(snake, 180, 180)
+                    }
+                }
+                is River -> {
+                    // 강 Layout - 악어와 통나무 그리기
+
+                    // Model에서 배열로 악어/통나무 데이터를 받아온다.
+                    val riverCharacter = gameModel.landForm[i].getGameCharacter()
+
+                    // 악어인지 통나무인지 확인이 필요하다
+                    // 반복문을 통해 받은 데이터를 다 넣어주는데 악어/통나무 서로 다른 이미지로 세팅
+                    for (character in riverCharacter) {
+                        if (character is Timber) {
+                            // 통나무 일 경우,
+                            // ImageView를 생성하여 통나무 그림을 넣고 Model에서 위치 값을 가져와서 해당 위치로 위치시킨다.
+                            // Viewgroup에 addView함으로써 실제로 화면상에 보이게 된다.
+                            val timber = ImageView(this)
+                            timber.setBackgroundResource(R.drawable.timber)
+                            timber.scaleType = ImageView.ScaleType.CENTER_CROP
+                            timber.x = character.left
+
+                            layouts[i].addView(timber, 400, 180)
+                        } else {
+                            // 악어일 경우,
+                            // ImageView를 생성하여 악어 그림을 넣고 Model에서 위치 값을 가져와서 해당 위치로 위치시킨다.
+                            // Viewgroup에 addView함으로써 실제로 화면상에 보이게 된다.
+                            val crocodile = ImageView(this)
+                            crocodile.setBackgroundResource(R.drawable.crokerdail)
+                            crocodile.scaleType = ImageView.ScaleType.CENTER_CROP
+                            crocodile.x = character.left
+
+                            if (character.direction < 0) {
+                                // 강이 흐르는 방향에 따라 악어 흐르는 방향도 달라진다.
+                                // Model에서 악어의 방향을 확인하고 화면상의 악어의 방향도 바꿔준다.
+                                crocodile.rotationY = 180f
+                            }
+
+                            layouts[i].addView(crocodile, 400, 180)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun refreshUI() {
         // Model --> Controller --> View
-        frogImage.x = gameModel.frog.getLeft()
-        frogImage.y = gameModel.frog.getY()
-    }
+        // << Model 값 변화를 Controller에 가져와서 View 에 반영 >>
+        // 개구리가 점프를 한 경우, 개구리의 Y 값이 변했을 텐데 해당 변경된 값을 가져와 View를 업데이트.
+        // 개구리가 통나무나 악어에 올라탄 경우, 움직이며 좌표가 변한다. 해당 좌표를 추적하며 View에서의 개구리를 업데이트 시킨다.
+        frogImage.y = gameModel.frog.y
+        frogImage.x = gameModel.frog.left
 
-    private fun setSnakeUI() {
-        // 화면에 뱀을 그리는 부분
-        // 뱀을 넣어줄  ViewGroup
-        val snakeLayout = findViewById<View>(R.id.layout4) as ConstraintLayout
+        // 강에 위치한 통나무와 악어들도 계속 움직인다.
+        // 움직임을 지속적으로 관찰해 화면에 반영한다.
+        for (i in 0 until gameModel.landForm.size) {
+            // 강만 지속적으로 흐르기 때문에 Model의 landFrom에서 강만 추적하여 확인한다.
+            if (gameModel.landForm[i] is River) {
+                // 강에 위치한 통나무, 악어의 좌표를 가져와 View에 업데이트 한다.
+                layouts[i][0].x = gameModel.landForm[i].getGameCharacter()[0].left
+                layouts[i][1].x = gameModel.landForm[i].getGameCharacter()[1].left
+                layouts[i][2].x = gameModel.landForm[i].getGameCharacter()[2].left
+                layouts[i][3].x = gameModel.landForm[i].getGameCharacter()[3].left
 
-        // 개구리는 한마리 였지만 뱀은 다수이기 때문에 Model에서 getSnake() 메서드를 통해 배열로 Snake를 넘긴다.
-        // Snake 들의 정보가 담긴 배열을 snakes에 넣는다.
-        val snakes = gameModel.land.getSnakes()
-
-        // 받은 snakes만큼 반복문을 돌며 화면에 그려준다.
-        // ImageView를 생성하여 뱀 그림을 넣고 Model에서 위치 값을 가져와서 해당 위치로 위치시킨다.
-        // Viewgroup에 addView함으로써 실제로 화면상에 보이게 된다.
-        for (item in snakes) {
-            val snake = ImageView(this)
-            snake.setBackgroundResource(R.drawable.snake)
-            snake.x = item.getLeft()
-
-            snakeLayout.addView(snake, 180, 180)
+            }
         }
-    }
 
-    private fun setScoreBoardUI() {
-        // 화면에 점수판을 그리는 부분
-        // 점수판을 넣어줄 ViewGroup
-        val scoreBoardLayout = findViewById<View>(R.id.layout1) as ConstraintLayout
+        // Model의 점수, step 값이 변경되면 View 에서 반영한다.
+        binding.textScore.text = gameModel.score.toString()
+        binding.textLives.text = gameModel.step.toString()
 
-        // Model에서 ScoreBoard 배열값을 가져와 boards에 넣는다.
-        val boards = gameModel.land.getBoards()
-
-        // 받은 boards만큼 반복문을 돌며 화면에 그려준다.
-        // ImageView를 생성하여 점수판 그림을 넣고 Model에서 위치 값을 가져와서 해당 위치로 위치시킨다.
-        // Viewgroup에 addView함으로써 실제로 화면상에 보이게 된다.
-        for (element in boards) {
-            val panel = ImageView(this)
-            panel.setBackgroundResource(R.drawable.circle)
-            panel.x = element.getLeft()
-
-            scoreBoardLayout.addView(panel, 180, 180)
-        }
-    }
-
-    private fun setCrocodile() {
-        // 강의 방향성에 따라 악어의 방향도 달라진다.
-        // 구한 이미지가 머리가 오른쪽을 향한 이미지이므로 강의 방향이 반대인 부분에선 crocodile의 ImageView의 방향을 바꿔준다.
-        // Model --> Controller --> View
-        if (gameModel.river2.crocodile.reverse) {
-            crocodileInLayout3.rotationY = 180f
-        }
-        if (gameModel.river4.crocodile.reverse) {
-            crocodileInLayout6.rotationY = 180f
-        }
-    }
-
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        // 개구리가 점프를 할 높이를 layout의 높이만큼으로 설정
-        // 화면에 focus 얻을 때 높이를 구하여 높이를 저장
-        height = layout2.measuredHeight
-    }
-
-    private fun initial() {
-        // 화면을 그리는데 사용되는 View 및 ViewGroup들
-        layout1 = findViewById(R.id.layout1)
-        layout2 = findViewById(R.id.layout2)
-        layout3 = findViewById(R.id.layout3)
-        layout4 = findViewById(R.id.layout4)
-        layout5 = findViewById(R.id.layout5)
-        layout6 = findViewById(R.id.layout6)
-        layout7 = findViewById(R.id.layout7)
-        layout = findViewById(R.id.layout)
-        btnJump = findViewById(R.id.btnJump)
-
-        timber1InLayout2 = findViewById(R.id.timber1InLayout2)
-        timber2InLayout2 = findViewById(R.id.timber2InLayout2)
-        crocodileInLayout2 = findViewById(R.id.crocodileInLayout2)
-        timber1InLayout3 = findViewById(R.id.timber1InLayout3)
-        timber2InLayout3 = findViewById(R.id.timber2InLayout3)
-        crocodileInLayout3 = findViewById(R.id.crocodileInLayout3)
-        timber1InLayout5 = findViewById(R.id.timber1InLayout5)
-        timber2InLayout5 = findViewById(R.id.timber2InLayout5)
-        crocodileInLayout5 = findViewById(R.id.crocodileInLayout5)
-        timber1InLayout6 = findViewById(R.id.timber1InLayout6)
-        timber2InLayout6 = findViewById(R.id.timber2InLayout6)
-        crocodileInLayout6 = findViewById(R.id.crocodileInLayout6)
-
-        score = findViewById(R.id.textScore)
-        lives = findViewById(R.id.textLives)
     }
 
     private fun checkUpdate() {
-        // 10ms 간격으로 model값을 가져와서 View를 업데이트 시킨다.
-        // 지속적 업데이트 및 데이터 관찰이 필요 - runnable 객체 생성, handler통해 10ms로 지속적 업데이트
+        // 20ms 간격으로 model값을 가져와서 View를 업데이트 시킨다.
+        // 지속적 업데이트 및 데이터 관찰이 필요 - runnable 객체 생성, handler통해 20ms로 지속적 업데이트
         handler = Handler()
         runnable = object : Runnable {
             override fun run() {
+                // Action
+                // 게임을 계속 진행시킨다. (강에서 움직이는 캐릭터들 move시킨다.)
+                gameModel.progress()
 
-                // Controller --> Model
-                // 강이 흐르게 함.
-                gameModel.river1.flow()
-                gameModel.river2.flow()
-                gameModel.river3.flow()
-                gameModel.river4.flow()
+                // Refresh
+                // Model에서 데이터가 바뀌면 값을 View에도 업데이트 시킨다.
+                refreshUI()
 
-                // 개구리가 강 위의 객체에 제대로 올라타서 움직이는가
-                // frogFlowOnRiver값이 있다면 제대로 올라탄 강이 있는거
-                if (gameModel.frogFlowOnRiver != null) {
-                    gameModel.frogMove(gameModel.frogFlowOnRiver)
-                }
-
-                // Model --> Controller --> View
-                // << Model 값 변화를 Controller에 가져와서 View 에 반영 >>
-                // 개구리가 점프를 한 경우, 개구리의 Y 값이 변했을 텐데 해당 변경된 값을 가져와 View를 업데이트.
-                // 개구리가 통나무나 악어에 올라탄 경우, 움직이며 좌표가 변한다. 해당 좌표를 추적하며 View에서의 개구리를 업데이트 시킨다.
-                frogImage.y = gameModel.frog.getY()
-                frogImage.x = gameModel.frog.getLeft()
-
-                // 아래 통나무와 악어들도 계속 움직인다.
-                // 움직임을 지속적으로 관찰해 화면에 반영한다.
-                // timber
-                timber1InLayout2.x = gameModel.river1.timber1.getLeft()
-                timber2InLayout2.x = gameModel.river1.timber2.getLeft()
-                timber1InLayout3.x = gameModel.river2.timber1.getLeft()
-                timber2InLayout3.x = gameModel.river2.timber2.getLeft()
-                timber1InLayout5.x = gameModel.river3.timber1.getLeft()
-                timber2InLayout5.x = gameModel.river3.timber2.getLeft()
-                timber1InLayout6.x = gameModel.river4.timber1.getLeft()
-                timber2InLayout6.x = gameModel.river4.timber2.getLeft()
-
-                // crocodile
-                crocodileInLayout2.x = gameModel.river1.crocodile.getLeft()
-                crocodileInLayout3.x = gameModel.river2.crocodile.getLeft()
-                crocodileInLayout5.x = gameModel.river3.crocodile.getLeft()
-                crocodileInLayout6.x = gameModel.river4.crocodile.getLeft()
-
-                // Model의 점수, step 값이 변경되면 View 에서 반영한다.
-                score.text = gameModel.score.toString()
-                lives.text = gameModel.step.toString()
-
-                // 게임오버인지 game.state로 확인
+                // Check
+                // 게임오버인지 gameModel.state로 확인
                 if (gameModel.state != Game.GAMESTATE.IN_PROGRESS) {
                     gameOver()
                 }
 
-                handler.postDelayed(this, 10)
+                handler.postDelayed(this, 20)
             }
         }
         handler.post(runnable)
@@ -288,7 +255,7 @@ class MainActivity : AppCompatActivity() {
         // Model에서 개구리 상태 변했을 때 알린다.
         when (gameModel.state) {
             Game.GAMESTATE.SCORE -> {
-                Toast.makeText(this@MainActivity, "점수 획득! ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "[Success] 점수 획득! ", Toast.LENGTH_SHORT).show()
             }
             Game.GAMESTATE.SNAKE -> {
                 Toast.makeText(this@MainActivity, "[DEAD] 개구리 뱀에게 먹힘 ", Toast.LENGTH_SHORT).show()
@@ -303,33 +270,30 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, "[DEAD] 개구리 물에 빠짐", Toast.LENGTH_SHORT).show()
             }
             Game.GAMESTATE.FINISHED -> gameFinish()
-            else -> Toast.makeText(this@MainActivity, "[ERROR] 알 수 없는 개구리의 죽음 ", Toast.LENGTH_SHORT).show()
+            else -> Toast.makeText(this@MainActivity, "[ERROR] 알 수 없는 개구리의 죽음 ", Toast.LENGTH_SHORT)
+                .show()
         }
 
         // state가 FINISHED가 아니면 재시작을 한다.
+
         // 게임 재시작을 위한 로직.
-        // 개구리, 뱀, 점수판 다시 그려야 함.
-        // 기존에 동적으로 addView로 개구리와 뱀과 점수판을 추가했다. 게임 새로 시작하면 새로 값을 받을 테니 ViewGroup에서 addView 된 View들을 지워준다.
-        layout.removeView(frogImage)
-        layout4.removeAllViews()
-        layout1.removeAllViews()
+        // 게임 새로 시작하면 새로 Model에서 값을 받아 다시 그린다. ViewGroup에서 addView 된 View들을 지워준다.
+        binding.layout.removeView(frogImage)
+        for (layout in layouts) {
+            layout.removeAllViews()
+        }
 
         // 게임 재시작
         gameModel.gameStart()
-        jumpCnt = 6
-        setFrogUI() // 개구리 생성, 처음 위치로
-        setSnakeUI() // 뱀 새로운 위치, 개수로 새로 데이터 받아와 그리기
-        setScoreBoardUI() // 점수판 새로운 위치로 새로 데이터 받아와 그리기
+        initialUI()
     }
 
     private fun gameFinish() {
         // 완전히 게임 끝!
         // 게임 끝났다는 토스트 메시지
-        Toast.makeText(this@MainActivity, "게임 끝 - 지금까지 개구리 게임이었습니다. :) ", Toast.LENGTH_LONG)
-            .show()
+        Toast.makeText(this@MainActivity, "게임 끝 - 지금까지 개구리 게임이었습니다. :) ", Toast.LENGTH_LONG).show()
 
         // 움직이던 핸들러 runnable 제거
         handler.removeCallbacks(runnable)
     }
-
 }
