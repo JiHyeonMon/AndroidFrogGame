@@ -20,27 +20,23 @@ class Crocodile(l: Float, s: Int, d: Int): Character() {
 
     override fun move() {
         // 흐르기 시작
+        // 강의 속력과 방향에 맞춰 움직이게 한다.
+        left += speed * direction
+
+        // 움직이다 화면 밖으로 이제 사라진 경우, 다시 처음 위치로 이동시켜 계속해서 움질일 수 있게 한다.
         if (direction > 0) {
             // 순방향 (왼 --> 오) 인 경우
             if (left > 1440) {
-                left = 0f - width - 150
+                // 왼쪽 좌표를 0에서부터 자기자신만큼 더 왼쪽으로 해서 화면상에 안보이는 위치에서 100을 더 빼서 다른 캐릭터와 거리를 유지
+                left = 0f - width - 100
             }
         } else {
             // 역방향 (오 --> 왼) 인 경우
             if (left+width < 0) {
-                left = 1440f
+                // 왼쪽 좌표를 오른 화면 너머로 위치, +100을 하여 다른 캐릭터와 거리를 유지
+                left = 1440f + 100
             }
         }
-        // 통나무1, 2, 악어가 강의 속력과 방향에 맞춰 움직이게 한다.
-        left += speed * direction
-    }
-
-    override fun isFrogGetOn(lFrog: Float, rFrog: Float): Boolean {
-        // 악어에 올라탔는지 판단 - 완전히 겹치는지 판단
-        if (left <= lFrog && rFrog <= left+width) {
-            return true
-        }
-        return false
     }
 
     fun isCrocodileHead(lFrog: Float, rFrog: Float): Boolean {
