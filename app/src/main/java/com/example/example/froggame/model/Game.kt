@@ -206,10 +206,6 @@ class Game(width: Int, height: Int) {
         if (step == 0) {
             finish()
         }
-
-        // Goal이 있는 Destination, 뱀이 있는 Land는 완전 clear를 통해 새로 위치를 할당받아 위치시킬 수 있게 clearLandForm을 호출해준다.
-        landForm[0].clearLandForm()
-        landForm[3].clearLandForm()
     }
 
     private fun finish() {

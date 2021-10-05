@@ -21,8 +21,8 @@ import com.example.example.froggame.model.landform.River
 
 class MainActivity : AppCompatActivity() {
 
-    // 기기마다 화면 크기가 다르기때문에 개구리의 초기 위치, 점프 높이가 다 다르다.
-    // 앱이 시작되면 기기 화면의 크기를 구하고 Model에 넘겨 character들 설정에 사용한다.
+    // 기기마다 화면 크기가 다르기 때문에 개구리의 초기 위치, 점프 높이가 다 다르다.
+    // 앱이 시작되면 기기 화면의 크기를 구하고 Model에 넘겨 game character들 설정에 사용한다.
     private var screenWidth = 0
     private var screenHeight = 0
 
@@ -37,18 +37,18 @@ class MainActivity : AppCompatActivity() {
     // binding 객체 선언
     private lateinit var binding: ActivityMainBinding
 
-    // View에서 사용
+    // View에 사용되는 객체 참조
     lateinit var frogImage: ImageView
     lateinit var layouts: ArrayList<ViewGroup>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Reference View
+        // Reference View to use ViewBinding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // 기기의 화면 크기를 windowManager를 통해 받아온다.
-        // screenHeight와 screenWidth 값을 초기화한다.
+        // screenHeight와 screenWidth 값을 설정한다.
         val display = windowManager.defaultDisplay
         val size = Point()
         display.getSize(size)
@@ -68,15 +68,14 @@ class MainActivity : AppCompatActivity() {
 
         // 게임 생성
         gameModel = Game(screenHeight, screenWidth)
-
         // 게임 시작
         gameModel.gameStart()
 
         // Model에서 게임이 시작되고 게임 캐릭터들이 생성된다.
-        // initialUI()에서 Model에 생성된 캐릭터들을 확인하고 View에 추가한다.
+        // initialUI()에서 Model에 생성된 캐릭터 데이터를 확인하고 View에 추가한다.
         initialUI()
 
-        // 사용자가 화면의 '점프'버튼을 클릭시 개구리가 점프를 한다.
+        // 사용자가 화면의 '점프' 버튼을 클릭시 개구리가 점프를 한다.
         // View에서 이벤트 발생시 Controller에서 Model에 알려 적절히 데이터 처리를 한다.
         binding.btnJump.setOnClickListener {
             // 개구리가 점프해야 한다.
@@ -113,11 +112,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setGameCharacterUI() {
         // 개구리를 제외한 게임 캐릭터들을 그리는 부분
-        // 점수판, 통나무, 악어, 뱀을 각각 알맞은 지형에 그려준다.
+        // Model에서 지형 리스트 데이터를 가져와 반복문을 돌며 점수판, 통나무, 악어, 뱀을 각각 알맞은 지형에 그려준다.
 
-        for (i in 0 until layouts.size) {
-            // View에서의 layouts와 Model에서 landForm을 미리 같은 순서로 세팅해서 같은 i 인덱스에 같은 지형이 나오도록 초기 설정
-            // 그래서 layouts의 크기만큼을 반복문을 돌며, Model에서의 landform이 뭔지를 확인하고 View에서의 layout에 적절한 이미지를 추가한다.
+        for (i in 0 until gameModel.landForm.size) {
+            // View에서의 layout 배열과 Model에서 landForm 배열을 미리 같은 순서로 세팅해서 같은 i 인덱스에 같은 지형이 나오도록 초기 설정 (Destination -> river -> river -> land -> river -> river)
 
             when (gameModel.landForm[i]){
                 is Destination -> {
@@ -197,6 +195,32 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkUpdate() {
+        // 20ms 간격으로 model값을 가져와서 View를 업데이트 시킨다.
+        // 지속적 업데이트 및 데이터 관찰이 필요 - runnable 객체 생성, handler통해 20ms로 지속적 업데이트
+        handler = Handler()
+        runnable = object : Runnable {
+            override fun run() {
+                // Action
+                // 게임을 계속 진행시킨다. (강에서 움직이는 캐릭터들 move시킨다.)
+                gameModel.progress()
+
+                // Refresh
+                // Model에서 데이터가 바뀌면 값을 View에도 업데이트 시킨다.
+                refreshUI()
+
+                // Check
+                // 게임오버인지 gameModel.state로 확인
+                if (gameModel.state != Game.GAMESTATE.IN_PROGRESS) {
+                    gameOver()
+                }
+
+                handler.postDelayed(this, 20)
+            }
+        }
+        handler.post(runnable)
+    }
+
     private fun refreshUI() {
         // Model --> Controller --> View
         // << Model 값 변화를 Controller에 가져와서 View 에 반영 >>
@@ -225,33 +249,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun checkUpdate() {
-        // 20ms 간격으로 model값을 가져와서 View를 업데이트 시킨다.
-        // 지속적 업데이트 및 데이터 관찰이 필요 - runnable 객체 생성, handler통해 20ms로 지속적 업데이트
-        handler = Handler()
-        runnable = object : Runnable {
-            override fun run() {
-                // Action
-                // 게임을 계속 진행시킨다. (강에서 움직이는 캐릭터들 move시킨다.)
-                gameModel.progress()
-
-                // Refresh
-                // Model에서 데이터가 바뀌면 값을 View에도 업데이트 시킨다.
-                refreshUI()
-
-                // Check
-                // 게임오버인지 gameModel.state로 확인
-                if (gameModel.state != Game.GAMESTATE.IN_PROGRESS) {
-                    gameOver()
-                }
-
-                handler.postDelayed(this, 20)
-            }
-        }
-        handler.post(runnable)
-    }
-
-    fun gameOver() {
+    private fun gameOver() {
         // Model에서 개구리 상태 변했을 때 알린다.
         when (gameModel.state) {
             Game.GAMESTATE.SCORE -> {
