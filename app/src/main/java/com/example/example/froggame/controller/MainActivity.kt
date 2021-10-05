@@ -13,6 +13,7 @@ import androidx.core.view.get
 import com.example.example.froggame.R
 import com.example.example.froggame.databinding.ActivityMainBinding
 import com.example.example.froggame.model.Game
+import com.example.example.froggame.model.GameConfig
 import com.example.example.froggame.model.character.Timber
 import com.example.example.froggame.model.landform.Destination
 import com.example.example.froggame.model.landform.Land
@@ -65,7 +66,6 @@ class MainActivity : AppCompatActivity() {
             binding.riverLayout4
         )
 
-
         // 게임 생성
         gameModel = Game(screenHeight, screenWidth)
         // 게임 시작
@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         frogImage = ImageView(this)
         frogImage.setBackgroundResource(R.drawable.frog)
         frogImage.scaleType = ImageView.ScaleType.FIT_XY
-        frogImage.layoutParams = ViewGroup.LayoutParams(120, 120)
+        frogImage.layoutParams = ViewGroup.LayoutParams(GameConfig.FROG_WIDTH, GameConfig.FROG_HEIGHT)
 
         // ViewGroup에 만든 개구리 ImageView를 addView 시켜준다.
         gameLayout.addView(frogImage)
